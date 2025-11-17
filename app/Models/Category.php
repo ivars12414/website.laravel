@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Contracts\HasLanguageLinks;
-use App\Models\InfoBlocks\MainRegion;
 use App\Models\Traits\MultiLanguageExternal;
 use App\Models\Traits\WithStatus;
 use Illuminate\Database\Eloquent\Casts\Attribute;

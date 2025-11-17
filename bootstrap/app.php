@@ -5,6 +5,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 
+const IN_CMS = true;
 const ADMIN_FOLDER = 'adm';
 DEFINE("SECTION_CABINET", 5);
 

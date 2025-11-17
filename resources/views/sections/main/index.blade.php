@@ -47,14 +47,13 @@
                                     <a href="{{ $category->link }}" class="countries__item-wrapper">
                                         <div class="countries__flag">
                                             <img src="{{ $category->imgUrl }}"
-                                                 alt="{{ $category->name }} plans from {{ currency($category->min_price ?? 0)->convert()->format(withStrongInt: false) }}">
+                                                 alt="{{ $category->name }} plans from">
                                         </div>
 
                                         <div class="countries__content">
                                             <div class="countries__name">{{ $category->name }}</div>
                                             {{--                  <span class="btn btn--o-main">{!! returnWord('from %PRICE%', WORDS_INTERFACE, ['%PRICE%' => currency($category->min_price)->convert()->format(withStrongInt: false)]) !!}</span>--}}
-                                            <span
-                                                class="btn btn--o-main">{!! returnWord('from %PRICE%', WORDS_INTERFACE, ['%PRICE%' => CreditService::format(CreditService::convert($category->min_price))]) !!}</span>
+                                            <span class="btn btn--o-main"></span>
                                         </div>
                                     </a>
                                 </div>
