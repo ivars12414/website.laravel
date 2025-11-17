@@ -41,7 +41,7 @@ class CatalogController extends Controller
             ['title' => 'Catalog', 'url' => url()->current()],
         ]);
 
-        return view('sections.catalog.index', ['ctx' => $route]);
+        return view('sections.catalog.category', ['ctx' => $route]);
     }
 
     protected function itemBreadcrumbs($ctx, string $lang): array

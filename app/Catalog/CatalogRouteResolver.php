@@ -14,8 +14,9 @@ class CatalogRouteResolver
 
     public function __construct(
         CatalogCategoryServiceInterface $categoryService,
-        CatalogItemServiceInterface $itemService
-    ) {
+        CatalogItemServiceInterface     $itemService
+    )
+    {
         $this->categoryService = $categoryService;
         $this->itemService = $itemService;
     }
@@ -29,7 +30,7 @@ class CatalogRouteResolver
         $showCategories = isConfig('show_categories');
 
         if (isset($segments[0]) && $segments[0] === $langCode) array_shift($segments);
-        if (isset($segments[0]) && $segments[0] === 'catalog') array_shift($segments);
+        if (isset($segments[0]) && $segments[0] === section()->code) array_shift($segments);
 
         $filters = $request->query();
         $page = max((int)$request->query('page', 1), 1);
@@ -37,8 +38,11 @@ class CatalogRouteResolver
 
         if (empty($segments)) {
             $ctx = new CatalogRouteContext(CatalogRouteContext::TYPE_LIST);
-            $ctx->filters = $filters; $ctx->page = $page; $ctx->sort = $sort;
-            $ctx->showSubcategoryItems = $showSubcategoryItems; $ctx->showCategories = $showCategories;
+            $ctx->filters = $filters;
+            $ctx->page = $page;
+            $ctx->sort = $sort;
+            $ctx->showSubcategoryItems = $showSubcategoryItems;
+            $ctx->showCategories = $showCategories;
             $ctx->items = $this->categoryService->getItemsForCategory(null, $showSubcategoryItems);
             $ctx->categories = $showCategories ? $this->categoryService->getVisibleChildren(null, $filters) : null;
             return $ctx;
@@ -51,24 +55,36 @@ class CatalogRouteResolver
             $ctx->item = $item;
             array_pop($segments);
             if (!empty($segments)) $ctx->category = $this->categoryService->findByPathAndLanguage($segments, $language);
-            $ctx->filters = $filters; $ctx->page = $page; $ctx->sort = $sort;
-            $ctx->showSubcategoryItems = $showSubcategoryItems; $ctx->showCategories = $showCategories;
+            $ctx->filters = $filters;
+            $ctx->page = $page;
+            $ctx->sort = $sort;
+            $ctx->showSubcategoryItems = $showSubcategoryItems;
+            $ctx->showCategories = $showCategories;
             return $ctx;
         }
 
         $category = $this->categoryService->findByPathAndLanguage($segments, $language);
         if ($category) {
             $ctx = new CatalogRouteContext(CatalogRouteContext::TYPE_CATEGORY);
-            $ctx->category = $category; $ctx->filters = $filters; $ctx->page = $page; $ctx->sort = $sort;
-            $ctx->showSubcategoryItems = $showSubcategoryItems; $ctx->showCategories = $showCategories;
+            $ctx->category = $category;
+            $ctx->filters = $filters;
+            $ctx->page = $page;
+            $ctx->sort = $sort;
+
+
+            $ctx->showSubcategoryItems = $showSubcategoryItems;
+            $ctx->showCategories = $showCategories;
             $ctx->items = $this->categoryService->getItemsForCategory($category, $showSubcategoryItems);
             $ctx->categories = $showCategories ? $this->categoryService->getVisibleChildren($category, $filters) : null;
             return $ctx;
         }
 
         $ctx = new CatalogRouteContext(CatalogRouteContext::TYPE_LIST);
-        $ctx->filters = $filters; $ctx->page = $page; $ctx->sort = $sort;
-        $ctx->showSubcategoryItems = $showSubcategoryItems; $ctx->showCategories = $showCategories;
+        $ctx->filters = $filters;
+        $ctx->page = $page;
+        $ctx->sort = $sort;
+        $ctx->showSubcategoryItems = $showSubcategoryItems;
+        $ctx->showCategories = $showCategories;
         $ctx->items = $this->categoryService->getItemsForCategory(null, $showSubcategoryItems);
         $ctx->categories = $showCategories ? $this->categoryService->getVisibleChildren(null, $filters) : null;
         return $ctx;
