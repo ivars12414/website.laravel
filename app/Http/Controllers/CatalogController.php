@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Catalog\CatalogRouteResolver;
 use App\Support\PageContext;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class CatalogController extends Controller
@@ -19,6 +20,12 @@ class CatalogController extends Controller
     {
         $lang = $context->language();
         $route = $this->resolver->resolve($request, $lang);
+
+        if ($route->items instanceof Builder) {
+            $route->items = $route->items
+                ->paginate(12, ['*'], 'page', $route->page ?? 1)
+                ->withQueryString();
+        }
 
         if ($route->isItem() && !$route->item) abort(404);
         if ($route->isCategory() && !$route->category) abort(404);
