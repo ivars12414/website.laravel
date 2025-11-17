@@ -62,6 +62,20 @@ trait MultiLanguageExternal
             }
         }
 
+        if (str_starts_with($method, 'get')) {
+            $field = Str::snake(substr($method, 3));
+            $lang = $args[0] ?? null;
+            $fallback = $args[1] ?? true;
+
+            if (in_array($field, $this->multilingual ?? [])) {
+                $lang ??= lang()->id ?? getMainLang();
+
+                return $this->getTranslated($field, (string)$lang, $fallback);
+            }
+
+            return $this->getAttribute($field);
+        }
+
         return parent::__call($method, $args);
     }
 
