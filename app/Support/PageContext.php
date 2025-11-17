@@ -27,9 +27,9 @@ class PageContext
     public function setSection(Section $section): void
     {
         $this->section = $section;
-        $this->meta['title']       = $section->default_title;
-        $this->meta['description'] = $section->default_description;
-        $this->meta['h1']          = $section->default_h1;
+        $this->meta['title']       = $section->default_title ?? ($section->name ?? null);
+        $this->meta['description'] = $section->default_description ?? null;
+        $this->meta['h1']          = $section->default_h1 ?? $section->getH1();
         $this->meta['extra']       = (array)($section->meta_extra ?? []);
     }
     public function section(): ?Section { return $this->section; }
