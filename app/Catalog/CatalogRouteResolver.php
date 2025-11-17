@@ -2,17 +2,19 @@
 
 namespace App\Catalog;
 
+use App\Catalog\Contracts\CatalogCategoryServiceInterface;
+use App\Catalog\Contracts\CatalogItemServiceInterface;
 use App\Models\Language;
 use Illuminate\Http\Request;
 
 class CatalogRouteResolver
 {
-    protected CatalogCategoryService $categoryService;
-    protected CatalogItemService $itemService;
+    protected CatalogCategoryServiceInterface $categoryService;
+    protected CatalogItemServiceInterface $itemService;
 
     public function __construct(
-        CatalogCategoryService $categoryService,
-        CatalogItemService $itemService
+        CatalogCategoryServiceInterface $categoryService,
+        CatalogItemServiceInterface $itemService
     ) {
         $this->categoryService = $categoryService;
         $this->itemService = $itemService;

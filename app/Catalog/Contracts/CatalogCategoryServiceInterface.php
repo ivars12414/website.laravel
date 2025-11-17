@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Catalog;
+namespace App\Catalog\Contracts;
 
 use App\Models\Language;
 
-interface CatalogCategoryService
+interface CatalogCategoryServiceInterface
 {
     public function findByPathAndLanguage(array $pathSegments, Language $language);
 }
