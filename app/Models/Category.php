@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Contracts\HasLanguageLinks;
 use App\Models\InfoBlocks\MainRegion;
 use App\Models\Traits\MultiLanguageExternal;
-use App\Models\Traits\WithOrd;
 use App\Models\Traits\WithStatus;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
@@ -18,7 +17,6 @@ class Category extends BaseModel implements HasLanguageLinks
 
     use SoftDeletes;
     use WithStatus;
-    use WithOrd;
     use MultiLanguageExternal;
 
     protected array $multilingual = [
@@ -101,6 +99,17 @@ class Category extends BaseModel implements HasLanguageLinks
             ->where('parent_id', $id)
             ->get()
             ->all(); // вернёт обычный массив объектов
+    }
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new \App\Scopes\SortByOrdScope);
+
+        static::creating(function ($model) {
+            if (is_null($model->ord)) {
+                $model->ord = static::max('ord') + 1;
+            }
+        });
     }
 
 
