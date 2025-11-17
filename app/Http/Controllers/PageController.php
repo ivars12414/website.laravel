@@ -12,7 +12,7 @@ class PageController extends Controller
         $section = $context->section();
         abort_if(!$section, 404);
 
-        $controller = $section->default_controller ?? \App\Http\Controllers\TextSectionController::class;
+        $controller = $section->controller ?? \App\Http\Controllers\TextSectionController::class;
 
         return app()->call($controller . '@handle', compact('request', 'context'));
     }

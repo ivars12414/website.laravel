@@ -1,0 +1,23 @@
+option batch abort
+option confirm off
+
+# ===== 1. Качаем с FTP в C:\temp\ftp_download =====
+open ftp://main@saysim.io:kUDCl%3BouwVt%2ALUS%5B@saysim.io
+
+lcd "C:\temp\ftp_download"
+# корневая папка на FTP: /saysim.io/public_html
+synchronize local "C:\temp\ftp_download" "/saysim.io/public_html"
+
+close
+
+# ===== 2. Заливаем с C:\temp\ftp_download на SFTP =====
+open sftp://esteriolhostingn:ZFD.qxw2ncv6xjw3etp%21@vh3.makonix.com
+
+lcd "C:\temp\ftp_download"
+# целевая папка на SFTP, например:
+# /var/www/html или /home/user/site
+synchronize remote "C:\temp\ftp_download" "/home2/esteriolhostingn/public_html/laracart.esteriol.dev/old"
+
+close
+
+exit
