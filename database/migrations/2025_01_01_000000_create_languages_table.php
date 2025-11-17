@@ -6,13 +6,13 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
     public function up(): void {
-        Schema::create('languages', function (Blueprint $table) {
+        Schema::create('langs', function (Blueprint $table) {
             $table->id();
             $table->string('code', 5)->unique();
             $table->string('name');
-            $table->boolean('is_default')->default(false);
-            $table->timestamps();
+            $table->tinyInteger('status')->default(1);
+            $table->boolean('main')->default(false);
         });
     }
-    public function down(): void { Schema::dropIfExists('languages'); }
+    public function down(): void { Schema::dropIfExists('langs'); }
 };

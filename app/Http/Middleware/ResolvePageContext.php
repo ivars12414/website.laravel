@@ -21,9 +21,15 @@ class ResolvePageContext
         // Язык
         $langCode = $segments[0] ?? null;
         $language = null;
-        if ($langCode) $language = Language::where('code', $langCode)->first();
-        if (!$language) $language = Language::where('is_default', true)->first();
-        if ($language && isset($segments[0]) && $segments[0] === $language->code) array_shift($segments);
+        if ($langCode) {
+            $language = Language::where('status', 1)->where('code', $langCode)->first();
+        }
+        if (!$language) {
+            $language = Language::default();
+        }
+        if ($language && isset($segments[0]) && $segments[0] === $language->code) {
+            array_shift($segments);
+        }
 
         $context->setLanguage($language);
         if ($language) app()->setLocale($language->code);
@@ -31,9 +37,30 @@ class ResolvePageContext
         // Раздел
         $sectionCode = $segments[0] ?? null;
         $section = null;
-        if ($sectionCode) $section = Section::where('code', $sectionCode)->first();
-        if (!$section) $section = Section::where('code', 'home')->first();
-        if ($section && $sectionCode) array_shift($segments);
+        $sectionQuery = Section::query();
+        if ($language) {
+            $sectionQuery->where('lang_id', $language->id);
+        }
+
+        if ($sectionCode) {
+            $section = (clone $sectionQuery)
+                ->where(function ($q) use ($sectionCode) {
+                    $q->where('code', $sectionCode)->orWhere('hash', $sectionCode);
+                })
+                ->first();
+        }
+
+        if (!$section) {
+            $section = (clone $sectionQuery)
+                ->where(function ($q) {
+                    $q->where('code', 'home')->orWhere('hash', 'home');
+                })
+                ->first();
+        }
+
+        if ($section && $sectionCode) {
+            array_shift($segments);
+        }
 
         if ($section) $context->setSection($section);
 
