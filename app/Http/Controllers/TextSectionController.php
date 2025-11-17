@@ -10,7 +10,7 @@ class TextSectionController extends Controller
     public function handle(Request $request, PageContext $context)
     {
         $context->breadcrumbs([
-            ['title' => 'Home', 'url' => route('home', absolute: false) ?? '/'],
+//            ['title' => 'Home', 'url' => route('home', absolute: false) ?? '/'],
             ['title' => $context->section()->name, 'url' => url()->current()],
         ]);
 
