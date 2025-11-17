@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
-use App\Catalog\CatalogCategoryService;
-use App\Catalog\CatalogItemService;
+use App\Catalog\Contracts\CatalogCategoryServiceInterface;
+use App\Catalog\Contracts\CatalogItemServiceInterface;
+use App\Catalog\Services\CatalogCategoryService;
+use App\Catalog\Services\CatalogItemService;
 use App\Catalog\CatalogRouteResolver;
 use App\Seo\CatalogSeoResolver;
 use App\Seo\DefaultSectionSeoResolver;
@@ -20,17 +22,8 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton(PageContext::class, fn() => new PageContext());
 
-        // бинды сервисов каталога — пока заглушки кидаем на анонимки, чтобы не падало
-        $this->app->bind(CatalogCategoryService::class, function () {
-            return new class implements CatalogCategoryService {
-                public function findByPathAndLanguage(array $pathSegments, \App\Models\Language $language) { return null; }
-            };
-        });
-        $this->app->bind(CatalogItemService::class, function () {
-            return new class implements CatalogItemService {
-                public function findBySlugAndLanguage(string $slug, \App\Models\Language $language) { return null; }
-            };
-        });
+        $this->app->bind(CatalogCategoryServiceInterface::class, CatalogCategoryService::class);
+        $this->app->bind(CatalogItemServiceInterface::class, CatalogItemService::class);
 
         $this->app->singleton(SeoUrlManager::class, function ($app) {
             return new SeoUrlManager(

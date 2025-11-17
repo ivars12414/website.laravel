@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Catalog;
+namespace App\Catalog\Contracts;
 
 use App\Models\Language;
 
-interface CatalogItemService
+interface CatalogItemServiceInterface
 {
     public function findBySlugAndLanguage(string $slug, Language $language);
 }
