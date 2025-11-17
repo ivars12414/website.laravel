@@ -4,12 +4,13 @@ use App\Models\Language;
 use Illuminate\Support\Str;
 
 if (!function_exists('sectionHrefByHash')) {
-    function sectionHrefByHash(string $hash, int $langId): string
+    function sectionHrefByHash($hash, $lang_id = 0): string
     {
-        $language = Language::find($langId);
-        $prefix = $language ? $language->code : $langId;
-        $cleanHash = Str::startsWith($hash, '/') ? trim($hash, '/') : $hash;
-
-        return url(sprintf('/%s/%s', $prefix, $cleanHash));
+        $lang_id = ($lang_id > 0) ? $lang_id : lang()->id;
+        $sectData = getSectionDataByHash($hash, $lang_id);
+        if ($sectData['main'] && $lang_id == getMainLang()) {
+            return '/';
+        }
+        return sectionsCache::getHrefByHash($hash, (int)$lang_id);
     }
 }

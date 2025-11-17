@@ -95,76 +95,18 @@
         </div>
         <div class="header__wrapper header__wrapper--nav">
             <ul class="nav">
-                <li class="nav__item " itemprop="url" title="Contacts">
-                    <a href="/en/contacts">
-                        Contacts
-                    </a>
-                </li>
-                <li class="nav__item " itemprop="url" title="FAQ">
-                    <a href="/en/faq">
-                        FAQ
-                    </a>
-                </li>
-                <li class="nav__item " itemprop="url" title="Privacy Policy">
-                    <a href="/en/privacy-policy">
-                        Privacy Policy
-                    </a>
-                </li>
-                <li class="nav__item " itemprop="url" title="Gallery">
-                    <a href="/en/gallery">
-                        Gallery
-                    </a>
-                </li>
-                <li class="nav__item active" itemprop="url" title="Main">
-                    <a href="/">
-                        Main
-                    </a>
-                </li>
-                <li class="nav__item " itemprop="url" title="Catalog">
-                    <a href="/en/catalog">
-                        Catalog
-                    </a>
-                </li>
-                <li class="nav__item " itemprop="url" title="Login">
-                    <a href="/en/login">
-                        Login
-                    </a>
-                </li>
-                <li class="nav__item " itemprop="url" title="Registration">
-                    <a href="/en/registration">
-                        Registration
-                    </a>
-                </li>
-                <li class="nav__item " itemprop="url" title="Reminder">
-                    <a href="/en/reminder">
-                        Reminder
-                    </a>
-                </li>
-                <li class="nav__item " itemprop="url" title="Activation">
-                    <a href="/en/activation">
-                        Activation
-                    </a>
-                </li>
-                <li class="nav__item " itemprop="url" title="My profile">
-                    <a href="/en/my-profile">
-                        My profile
-                    </a>
-                </li>
-                <li class="nav__item " itemprop="url" title="Settings">
-                    <a href="/en/settings">
-                        Settings
-                    </a>
-                </li>
-                <li class="nav__item " itemprop="url" title="Logout">
-                    <a href="/en/logout">
-                        Logout
-                    </a>
-                </li>
-                <li class="nav__item " itemprop="url" title="Cart">
-                    <a href="/en/cart">
-                        Cart
-                    </a>
-                </li>
+                @foreach($page->menu('menu') as $section)
+                    <li @class([
+                    'nav__item',
+                    'active' => $page->section()->id === $section->id,
+                    'js-scroll' => !empty($section->scroll_href) && $page->section()->main,
+                ])
+                        title="{{ $section->name }}">
+                        <a href="{{ $section->getUrl() }}">
+                            {{ $section->name }}
+                        </a>
+                    </li>
+                @endforeach
             </ul>
         </div>
 

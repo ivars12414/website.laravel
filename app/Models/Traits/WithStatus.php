@@ -25,4 +25,15 @@ trait WithStatus
         $this->status = 0;
         $this->save();
     }
+
+    public static function active()
+    {
+        return static::where('status', 1)->get();
+    }
+
+    public static function whereActive()
+    {
+        return static::where('status', 1);
+    }
+
 }
