@@ -25,6 +25,9 @@ class CatalogRouteResolver
         $segments = $request->segments();
         $langCode = $language->code;
 
+        $showSubcategoryItems = isConfig('show_subcat_items');
+        $showCategories = isConfig('show_categories');
+
         if (isset($segments[0]) && $segments[0] === $langCode) array_shift($segments);
         if (isset($segments[0]) && $segments[0] === 'catalog') array_shift($segments);
 
@@ -35,6 +38,9 @@ class CatalogRouteResolver
         if (empty($segments)) {
             $ctx = new CatalogRouteContext(CatalogRouteContext::TYPE_LIST);
             $ctx->filters = $filters; $ctx->page = $page; $ctx->sort = $sort;
+            $ctx->showSubcategoryItems = $showSubcategoryItems; $ctx->showCategories = $showCategories;
+            $ctx->items = $this->categoryService->getItemsForCategory(null, $showSubcategoryItems);
+            $ctx->categories = $showCategories ? $this->categoryService->getVisibleChildren(null, $filters) : null;
             return $ctx;
         }
 
@@ -46,6 +52,7 @@ class CatalogRouteResolver
             array_pop($segments);
             if (!empty($segments)) $ctx->category = $this->categoryService->findByPathAndLanguage($segments, $language);
             $ctx->filters = $filters; $ctx->page = $page; $ctx->sort = $sort;
+            $ctx->showSubcategoryItems = $showSubcategoryItems; $ctx->showCategories = $showCategories;
             return $ctx;
         }
 
@@ -53,11 +60,17 @@ class CatalogRouteResolver
         if ($category) {
             $ctx = new CatalogRouteContext(CatalogRouteContext::TYPE_CATEGORY);
             $ctx->category = $category; $ctx->filters = $filters; $ctx->page = $page; $ctx->sort = $sort;
+            $ctx->showSubcategoryItems = $showSubcategoryItems; $ctx->showCategories = $showCategories;
+            $ctx->items = $this->categoryService->getItemsForCategory($category, $showSubcategoryItems);
+            $ctx->categories = $showCategories ? $this->categoryService->getVisibleChildren($category, $filters) : null;
             return $ctx;
         }
 
         $ctx = new CatalogRouteContext(CatalogRouteContext::TYPE_LIST);
         $ctx->filters = $filters; $ctx->page = $page; $ctx->sort = $sort;
+        $ctx->showSubcategoryItems = $showSubcategoryItems; $ctx->showCategories = $showCategories;
+        $ctx->items = $this->categoryService->getItemsForCategory(null, $showSubcategoryItems);
+        $ctx->categories = $showCategories ? $this->categoryService->getVisibleChildren(null, $filters) : null;
         return $ctx;
     }
 }

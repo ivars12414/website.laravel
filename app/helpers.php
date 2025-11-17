@@ -230,6 +230,29 @@ function getConfig(string $cfg)
 
 }
 
+function isConfig(string $cfg): bool
+{
+    $value = getConfig($cfg);
+
+    if (is_null($value)) {
+        return false;
+    }
+
+    if (is_bool($value)) {
+        return $value;
+    }
+
+    if (is_numeric($value)) {
+        return (bool)$value;
+    }
+
+    if (is_string($value)) {
+        return in_array(mb_strtolower($value), ['1', 'true', 'yes', 'on'], true);
+    }
+
+    return (bool)$value;
+}
+
 function getAdminLang(): int
 {
     return (int)Language::where('admin', 1)->value('id');
