@@ -25,17 +25,28 @@ if (!function_exists('context')) {
     }
 }
 
+if (!function_exists('page_context')) {
+    function page_context(): ?PageContext
+    {
+        $ctx = function_exists('context') ? context() : null;
+
+        return $ctx instanceof PageContext
+            ? $ctx
+            : (app()->bound(PageContext::class) ? app(PageContext::class) : null);
+    }
+}
+
 if (!function_exists('lang')) {
     function lang(): ?Language
     {
-        return context()->language();
+        return page_context()?->language();
     }
 }
 
 if (!function_exists('section')) {
     function section(): ?Section
     {
-        return context()->section();
+        return page_context()?->section();
     }
 }
 
@@ -228,7 +239,7 @@ function returnWord($code, $type = 99, $vars = [])
 {
     global $langId, $translateLangId;
 
-    $langId = $langId ?? context()->language()?->id ?? getMainLang();
+    $langId = $langId ?? page_context()?->language()?->id ?? getMainLang();
 
     if (isset($_GET["table"]) || stristr($_SERVER['REQUEST_URI'], "/" . ADMIN_FOLDER . "/")) {
         $langId = getMainLang();
