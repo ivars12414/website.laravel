@@ -228,6 +228,8 @@ function returnWord($code, $type = 99, $vars = [])
 {
     global $langId, $translateLangId;
 
+    $langId = $langId ?? context()->language()?->id ?? getMainLang();
+
     if (isset($_GET["table"]) || stristr($_SERVER['REQUEST_URI'], "/" . ADMIN_FOLDER . "/")) {
         $langId = getMainLang();
         $translateLangId = $langId;
