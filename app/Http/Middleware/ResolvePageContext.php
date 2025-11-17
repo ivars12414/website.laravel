@@ -69,6 +69,30 @@ class ResolvePageContext
             return redirect()->route('login');
         }
 
+        // Меню
+        $langId = $context->language()?->id;
+        $context->setMenus([
+            'menu' => Section::whereActive()
+                ->where('lang_id', $langId)
+                ->where('hide_in_menu', '0')
+                ->whereIn('position', [Section::POSITION_HEADER, Section::POSITION_HEADER_BOTTOM])
+                ->orderBy('order_id')
+                ->get(),
+            'bottom_menu' => Section::whereActive()
+                ->where('lang_id', $langId)
+                ->where('hide_in_menu', '0')
+                ->whereIn('position', [Section::POSITION_BOTTOM, Section::POSITION_HEADER_BOTTOM])
+                ->orderBy('bottom_order_id')
+                ->get(),
+            'cabinet_menu' => Section::whereActive()
+                ->where('lang_id', $langId)
+                ->where('parent_id', 0)
+                ->where('position', Section::POSITION_CABINET)
+                ->where('hide_in_menu', '0')
+                ->orderBy('order_id')
+                ->get(),
+        ]);
+
         // SEO
         app(SeoUrlManager::class)->resolve($request);
 
