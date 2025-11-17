@@ -11,9 +11,13 @@ class CatalogRouteContext
     public string $type;
     public $category = null;
     public $item = null;
+    public $items = null;
+    public $categories = null;
     public array $filters = [];
     public ?int $page = null;
     public ?string $sort = null;
+    public bool $showSubcategoryItems = false;
+    public bool $showCategories = false;
 
     public function __construct(string $type) { $this->type = $type; }
 
