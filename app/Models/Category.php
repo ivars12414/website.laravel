@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection as SupportCollection;
 
 class Category extends BaseModel implements HasLanguageLinks
 {
@@ -148,6 +149,30 @@ class Category extends BaseModel implements HasLanguageLinks
     public static function findBySlug(string $slug)
     {
         return self::where('slug', $slug)->first();
+    }
+
+
+    public function getParentsChain(string $lang): SupportCollection
+    {
+        if (property_exists($this, 'tree') && $this->tree instanceof SupportCollection) {
+            return $this->tree->slice(0, -1)->values();
+        }
+
+        $chain = collect();
+        $parentId = $this->parent_id;
+
+        while ($parentId) {
+            $parent = self::whereActive()->find($parentId);
+
+            if (!$parent) {
+                break;
+            }
+
+            $chain->push($parent);
+            $parentId = $parent->parent_id;
+        }
+
+        return $chain->reverse()->values();
     }
 
 }
