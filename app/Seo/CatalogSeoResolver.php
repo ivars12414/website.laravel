@@ -25,7 +25,7 @@ class CatalogSeoResolver implements SectionSeoResolverInterface
 
     public function resolve(Request $request, PageContext $context): void
     {
-        $section  = $context->section();
+        $section = $context->section();
         $language = $context->language();
         if (!$section || !$language) return;
 
@@ -49,15 +49,15 @@ class CatalogSeoResolver implements SectionSeoResolverInterface
                 $catPath = $ctx->category ? trim($ctx->category->getPath($langCode), '/') : null;
                 $slug = $ctx->item->getSlug($langCode);
                 if (!$slug) return null;
-                return '/' . $langCode . '/catalog' . ($catPath ? '/' . $catPath : '') . '/' . $slug;
+                return sectionHref('catalog', Language::where('code', $langCode)->id) . ($catPath ? '/' . $catPath : '') . '/' . $slug;
 
             case CatalogRouteContext::TYPE_CATEGORY:
                 $catPath = trim($ctx->category->getPath($langCode), '/');
                 if (!$catPath) return null;
-                return '/' . $langCode . '/catalog/' . $catPath;
+                return sectionHref('catalog', Language::where('code', $langCode)->id) . $catPath;
 
             case CatalogRouteContext::TYPE_LIST:
-                return '/' . $langCode . '/catalog';
+                return sectionHref('catalog', Language::where('code', $langCode)->id);
 
             default:
                 return null;

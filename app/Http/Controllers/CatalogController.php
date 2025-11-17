@@ -26,29 +26,29 @@ class CatalogController extends Controller
         if ($route->isItem()) {
             $context->meta('title', $route->item->getMetaTitle($lang->code) ?? $route->item->getName($lang->code));
             $context->breadcrumbs($this->itemBreadcrumbs($route, $lang->code));
-            return view('catalog.item', ['ctx' => $route]);
+            return view('sections.catalog.item', ['ctx' => $route]);
         }
 
         if ($route->isCategory()) {
             $context->meta('title', $route->category->getMetaTitle($lang->code) ?? $route->category->getName($lang->code));
             $context->breadcrumbs($this->categoryBreadcrumbs($route, $lang->code));
-            return view('catalog.category', ['ctx' => $route]);
+            return view('sections.catalog.category', ['ctx' => $route]);
         }
 
         $context->meta('title', 'Catalog');
         $context->breadcrumbs([
-            ['title' => 'Home', 'url' => route('home', absolute: false) ?? '/'],
+//            ['title' => 'Home', 'url' => route('home', absolute: false) ?? '/'],
             ['title' => 'Catalog', 'url' => url()->current()],
         ]);
 
-        return view('catalog.index', ['ctx' => $route]);
+        return view('sections.catalog.index', ['ctx' => $route]);
     }
 
     protected function itemBreadcrumbs($ctx, string $lang): array
     {
         $bc = [
-            ['title' => 'Home', 'url' => route('home', absolute: false) ?? '/'],
-            ['title' => 'Catalog', 'url' => '/' . $lang . '/catalog'],
+//            ['title' => 'Home', 'url' => route('home', absolute: false) ?? '/'],
+            ['title' => 'Catalog', 'url' => sectionHref('catalog', $ctx->language()->id)],
         ];
         if ($ctx->category) {
             foreach ($ctx->category->getParentsChain($lang) as $cat) {
@@ -62,8 +62,8 @@ class CatalogController extends Controller
     protected function categoryBreadcrumbs($ctx, string $lang): array
     {
         $bc = [
-            ['title' => 'Home', 'url' => route('home', absolute: false) ?? '/'],
-            ['title' => 'Catalog', 'url' => '/' . $lang . '/catalog'],
+//            ['title' => 'Home', 'url' => route('home', absolute: false) ?? '/'],
+            ['title' => 'Catalog', 'url' => sectionHref('catalog', $ctx->language()->id)],
         ];
         foreach ($ctx->category->getParentsChain($lang) as $cat) {
             $bc[] = ['title' => $cat->getName($lang), 'url' => $cat->getUrl($lang)];

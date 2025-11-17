@@ -14,6 +14,10 @@ class PageController extends Controller
 
         $controller = $section->controller ?? \App\Http\Controllers\TextSectionController::class;
 
-        return app()->call($controller . '@handle', compact('request', 'context'));
+        return app()->call(
+            '\\App\\Http\\Controllers\\' . $controller . '@handle',
+            compact('request', 'context')
+        );
+
     }
 }

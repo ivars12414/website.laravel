@@ -19,7 +19,7 @@ class LC
 
     private function __construct()
     {
-        global $translateLangId, $table_prefix;
+        global $translateLangId;
 
         if (isset($_GET["table"]) || stristr($_SERVER['REQUEST_URI'], "/" . ADMIN_FOLDER . "/")) {
             $translateLangId = getAdminLang();
