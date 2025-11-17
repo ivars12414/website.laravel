@@ -20,6 +20,7 @@ class PageContext
     protected array $breadcrumbs = [];
     protected ?string $canonicalUrl = null;
     protected array $alternates = [];
+    protected array $menus = [];
 
     public function setLanguage(Language $language): void { $this->language = $language; }
     public function language(): ?Language { return $this->language; }
@@ -59,4 +60,11 @@ class PageContext
 
     public function setAlternate(string $langCode, string $url): void { $this->alternates[$langCode] = $url; }
     public function alternates(): array { return $this->alternates; }
+
+    public function setMenus(array $menus): void { $this->menus = $menus; }
+    public function menu(string $key = null)
+    {
+        if (is_null($key)) return $this->menus;
+        return $this->menus[$key] ?? null;
+    }
 }
