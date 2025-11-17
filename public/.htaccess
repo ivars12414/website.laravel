@@ -23,3 +23,9 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+
+<IfModule lsapi_module>
+<FilesMatch ".(php|php4|php5|php53|php54|php55|php56|php6|php71|phtml)$">
+SetHandler application/x-httpd-alt-php84___lsphp
+</FilesMatch>
+</IfModule>
