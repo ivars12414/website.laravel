@@ -14,6 +14,7 @@ class CatalogRouteContext
     public $items = null;
     public $categories = null;
     public array $filters = [];
+    public array $filterOptions = [];
     public ?int $page = null;
     public ?string $sort = null;
     public bool $showSubcategoryItems = false;

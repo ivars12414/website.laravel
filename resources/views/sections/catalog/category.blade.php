@@ -47,6 +47,7 @@
                             @include('sections.catalog.partials.filter', [
                                 'items' => $ctx->items,
                                 'filters' => $ctx->filters,
+                                'filterOptions' => $ctx->filterOptions,
                                 'currentCategory' => $ctx->category,
                             ])
                         @endif
