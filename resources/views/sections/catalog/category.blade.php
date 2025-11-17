@@ -44,11 +44,15 @@
                         </div>
 
                         @if(isConfig('catalog_filter_enabled'))
-                            @include('sections.catalog.partials.filter', compact(['items' => $ctx->items, 'filters' => $ctx->filters, 'currentCategory' => $ctx->category]))
+                            @include('sections.catalog.partials.filter', [
+                                'items' => $ctx->items,
+                                'filters' => $ctx->filters,
+                                'currentCategory' => $ctx->category,
+                            ])
                         @endif
 
                         <div data-items-list>
-                            @include('sections.catalog.partials.items_list', compact('items'))
+                            @include('sections.catalog.partials.items_list', ['items' => $ctx->items])
                         </div>
                         <div data-items-pagination>
                             {{ $ctx->items->links() }}
