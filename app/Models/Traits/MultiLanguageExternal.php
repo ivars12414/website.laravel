@@ -2,7 +2,7 @@
 
 namespace App\Models\Traits;
 
-use Illuminate\Database\Capsule\Manager as DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 trait MultiLanguageExternal
 {
