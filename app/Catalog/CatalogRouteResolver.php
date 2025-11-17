@@ -4,7 +4,9 @@ namespace App\Catalog;
 
 use App\Catalog\Contracts\CatalogCategoryServiceInterface;
 use App\Catalog\Contracts\CatalogItemServiceInterface;
+use App\Models\Category;
 use App\Models\Language;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class CatalogRouteResolver
@@ -43,7 +45,7 @@ class CatalogRouteResolver
             $ctx->sort = $sort;
             $ctx->showSubcategoryItems = $showSubcategoryItems;
             $ctx->showCategories = $showCategories;
-            $ctx->items = $this->categoryService->getItemsForCategory(null, $showSubcategoryItems);
+            [$ctx->items, $ctx->filterOptions] = $this->prepareItems(null, $filters, $showSubcategoryItems);
             $ctx->categories = $showCategories ? $this->categoryService->getVisibleChildren(null, $filters) : null;
             return $ctx;
         }
@@ -74,7 +76,7 @@ class CatalogRouteResolver
 
             $ctx->showSubcategoryItems = $showSubcategoryItems;
             $ctx->showCategories = $showCategories;
-            $ctx->items = $this->categoryService->getItemsForCategory($category, $showSubcategoryItems);
+            [$ctx->items, $ctx->filterOptions] = $this->prepareItems($category, $filters, $showSubcategoryItems);
             $ctx->categories = $showCategories ? $this->categoryService->getVisibleChildren($category, $filters) : null;
             return $ctx;
         }
@@ -85,8 +87,66 @@ class CatalogRouteResolver
         $ctx->sort = $sort;
         $ctx->showSubcategoryItems = $showSubcategoryItems;
         $ctx->showCategories = $showCategories;
-        $ctx->items = $this->categoryService->getItemsForCategory(null, $showSubcategoryItems);
+        [$ctx->items, $ctx->filterOptions] = $this->prepareItems(null, $filters, $showSubcategoryItems);
         $ctx->categories = $showCategories ? $this->categoryService->getVisibleChildren(null, $filters) : null;
         return $ctx;
+    }
+
+    protected function prepareItems(?Category $category, array $filters, bool $withSubcategories = false): array
+    {
+        $query = $this->categoryService->getItemsForCategory($category, $withSubcategories);
+
+        $filterOptions = $this->collectFilterOptions($query);
+
+        $this->applyFilters($query, $filters);
+
+        $query->orderBy('price');
+
+        return [$query, $filterOptions];
+    }
+
+    protected function collectFilterOptions(Builder $query): array
+    {
+        $durations = (clone $query)
+            ->select('duration')
+            ->whereNotNull('duration')
+            ->distinct()
+            ->orderBy('duration')
+            ->pluck('duration');
+
+        $volumes = (clone $query)
+            ->select('volume')
+            ->whereNotNull('volume')
+            ->distinct()
+            ->orderBy('volume')
+            ->pluck('volume');
+
+        $dataTypes = (clone $query)
+            ->select('data_type')
+            ->where('data_type', '>', 0)
+            ->distinct()
+            ->orderBy('data_type')
+            ->pluck('data_type');
+
+        return compact('durations', 'volumes', 'dataTypes');
+    }
+
+    protected function applyFilters(Builder $query, array $filters): void
+    {
+        if (!empty($filters['duration'])) {
+            $query->where('items.duration', $filters['duration']);
+        }
+
+        if (!empty($filters['volume'])) {
+            $query->where('items.volume', $filters['volume']);
+        }
+
+        if (!empty($filters['data_type'])) {
+            $query->where('items.data_type', $filters['data_type']);
+        }
+
+        if (!empty($filters['search'])) {
+            $query->search(trim($filters['search']));
+        }
     }
 }
