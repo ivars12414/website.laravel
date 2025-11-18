@@ -12,6 +12,10 @@
             </div>
 
             <div class="settings__wrapper">
+                @php
+                    /** @var \App\Models\Client|null $client */
+                    $client = auth('client')->user();
+                @endphp
                 <div class="settings__block">
                     <form class="form" data-form="profile">
                         <div class="block__title"><strong>{!! returnWord('Information', WORDS_PROJECT) !!}</strong>
@@ -22,13 +26,13 @@
 
                         <div class="form__block">
                             <label class="label">{!! returnWord('Name', WORDS_INTERFACE) !!}:</label>
-                            <input type="text" class="input" name="name" value="{{ client()->name }}"
+                            <input type="text" class="input" name="name" value="{{ $client?->name }}"
                                    autocomplete="name">
                         </div>
 
                         <div class="form__block">
                             <label class="label">{!! returnWord('Surname', WORDS_INTERFACE) !!}:</label>
-                            <input type="text" class="input" name="surname" value="{{ client()->surname }}"
+                            <input type="text" class="input" name="surname" value="{{ $client?->surname }}"
                                    autocomplete="name">
                         </div>
 
@@ -43,7 +47,7 @@
                                                     disabled>{!! returnWord('DD', WORDS_INTERFACE) !!}</option>
                                             @for($i = 1; $i <= 31; $i++)
                                                 <option value="{{ $i }}"
-                                                    {{ client()->birthday?->day == $i ? 'selected' : '' }}
+                                                    {{ $client?->birthday?->day == $i ? 'selected' : '' }}
                                                 >{{ sprintf("%02d", $i) }}</option>
                                             @endfor
                                         </select>
@@ -57,7 +61,7 @@
                                                     disabled>{!! returnWord('MM', WORDS_INTERFACE) !!}</option>
                                             @foreach(getEnglishMonthAndDayNames()['months'] as $i => $month)
                                                 <option
-                                                    value="{{ $i }}" {{ client()->birthday?->month == $i ? 'selected' : '' }}
+                                                    value="{{ $i }}" {{ $client?->birthday?->month == $i ? 'selected' : '' }}
                                                 >{!! returnWord($month, WORDS_INTERFACE) !!}</option>
                                             @endforeach
                                         </select>
@@ -73,7 +77,7 @@
                                                        $i <= date('Y');
                                                        $i++)
                                                 <option value="{{ $i }}"
-                                                    {{ client()->birthday?->year == $i ? 'selected' : '' }}
+                                                    {{ $client?->birthday?->year == $i ? 'selected' : '' }}
                                                 >{{ $i }}</option>
                                             @endfor
                                         </select>
@@ -85,7 +89,7 @@
                         <div class="form__block">
                             <label class="label">{!! returnWord('E-mail', WORDS_INTERFACE) !!}:</label>
                             <input type="email" class="input" name="mail"
-                                   autocomplete="email" value="{{ client()->mail }}">
+                                   autocomplete="email" value="{{ $client?->mail }}">
                         </div>
 
                         <div class="form__block">
@@ -103,7 +107,7 @@
                                                                    ->orderBy('phonecode')
                                                                    ->get() as $country)
                                                 <option value="<?= $country->hash ?>"
-                                                    {{ $country->hash === client()->phone_country ? 'selected' : '' }}>
+                                                    {{ $country->hash === $client?->phone_country ? 'selected' : '' }}>
                                                     +{{ $country->phonecode }}
                                                 </option>
                                             @endforeach
@@ -113,7 +117,7 @@
 
                                 <div class="form__block large">
                                     <input type="tel" class="input" id="sign-up-phone" name="phone" autocomplete="phone"
-                                           value="{{ client()->phone }}">
+                                           value="{{ $client?->phone }}">
                                 </div>
                             </div>
                         </div>
