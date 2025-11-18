@@ -12,6 +12,7 @@ class ModalContentController extends Controller
     {
         return match ($action) {
             'auth/login' => $this->login(),
+            'auth/activation' => $this->activation($request),
             default => response()->json(['message' => 'Modal content not found'], 404),
         };
     }
@@ -20,6 +21,18 @@ class ModalContentController extends Controller
     {
         return response()->json([
             'html' => view('modals.auth.login')->render(),
+        ]);
+    }
+
+    protected function activation(Request $request): JsonResponse
+    {
+        $mail = filter_var((string)$request->input('mail'), FILTER_SANITIZE_EMAIL);
+
+        return response()->json([
+            'html' => view('modals.auth.activation', [
+                'mail' => $mail,
+                'seconds' => ACTIVATION_CODE_RESEND_COUNTDOWN,
+            ])->render(),
         ]);
     }
 }

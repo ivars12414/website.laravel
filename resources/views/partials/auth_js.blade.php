@@ -99,7 +99,7 @@
 
         new FormSubmit({
             formSelector: '.js-activation-code-form',
-            ajaxUrl: "/modules/auth/activation/handler.php?lid=<?= lang()->id ?>",
+            ajaxUrl: "{{ route('auth.activation') }}",
             resetFormOnSuccess: true,
             createDefaultAlerts: false,
             showAlertOnSuccess: false,
@@ -159,7 +159,7 @@
 
             $alerts.hide().removeClass(success).removeClass(error).html("");
             $.ajax({
-                url: "/modules/auth/ajax/resend_activation_code.php?lid=<?= lang()->id ?>",
+                url: "{{ route('auth.activation.resend') }}",
                 type: 'POST',
                 dataType: 'JSON',
                 data: $form.serialize(),
