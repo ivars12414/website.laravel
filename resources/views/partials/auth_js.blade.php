@@ -39,7 +39,7 @@
 
         new FormSubmit({
             formSelector: '.js-login-form',
-            ajaxUrl: "/modules/auth/login/handler.php?lid=<?= lang()->id ?>",
+            ajaxUrl: "{{ route('auth.login') }}",
             resetFormOnSuccess: true,
             showAlertOnSuccess: false,
             createDefaultAlerts: false,
