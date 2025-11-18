@@ -32,12 +32,12 @@
                                 <li class="nav__item with-sub">
                                     <a href="{{ sectionHref('cabinet') }}" data-modal-caller data-action="auth/profile"
                                        data-cache>
-                                        {{ auth()->user()?->name ?? auth()->user()?->email ?? returnWord('My account', WORDS_PROJECT) }}
+                                        {{ auth()->user()?->name ?? auth()->user()?->mail ?? returnWord('My account', WORDS_PROJECT) }}
                                     </a>
 
                                     <div class="nav__submenu-wrapper">
                                         <ul class="nav__submenu">
-                                            @forelse($cabinet_menu as $section)
+                                            @forelse($page->menu('cabinet_menu') as $section)
                                                 @continue($section->label === 'logout')
                                                 <li @class([
                                                     'nav__submenu-item',
@@ -51,7 +51,8 @@
                                                     </a>
                                                 </li>
                                             @empty
-                                                <li class="nav__submenu-item" title="{!! returnWord('My account', WORDS_PROJECT) !!}">
+                                                <li class="nav__submenu-item"
+                                                    title="{!! returnWord('My account', WORDS_PROJECT) !!}">
                                                     <span>{!! returnWord('My account', WORDS_PROJECT) !!}</span>
                                                 </li>
                                             @endforelse
@@ -101,7 +102,7 @@
 
                                 <div class="nav__submenu-wrapper">
                                     <ul class="nav__submenu">
-                                        @forelse($cabinet_menu as $section)
+                                        @forelse($page->menu('cabinet_menu') as $section)
                                             @continue($section->label === 'logout')
                                             <li @class([
                                                 'nav__submenu-item',
@@ -115,11 +116,13 @@
                                                 </a>
                                             </li>
                                         @empty
-                                            <li class="nav__submenu-item" title="{!! returnWord('My account', WORDS_PROJECT) !!}">
+                                            <li class="nav__submenu-item"
+                                                title="{!! returnWord('My account', WORDS_PROJECT) !!}">
                                                 <span>{!! returnWord('My account', WORDS_PROJECT) !!}</span>
                                             </li>
                                         @endforelse
-                                        <li class="nav__submenu-item logout" title="{!! returnWord('Log out', WORDS_PROJECT) !!}">
+                                        <li class="nav__submenu-item logout"
+                                            title="{!! returnWord('Log out', WORDS_PROJECT) !!}">
                                             <a href="#" data-modal-caller data-action="auth/logout" data-cache>
                                                 {!! returnWord('Log out', WORDS_PROJECT) !!}
                                             </a>
