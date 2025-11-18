@@ -9,6 +9,8 @@
         <div class="block__text"><?= $_POST['text'] ?></div>
         <?php } ?>
 
+        <div class="js-alert alert" data-form="login" data-group="default" style="display: none"></div>
+
         <div class="form__block">
             <label for="modal-sign-in-email" class="label">{!!  returnWord("E-mail", WORDS_INTERFACE) !!}:</label>
             <input type="email" name="mail" id="modal-sign-in-email" class="input"
@@ -22,7 +24,7 @@
 
         <div class="form__row">
             <div class="form__block">
-                <button type="submit" class="btn btn--main" disabled>
+                <button type="submit" class="btn btn--main">
                     {!! returnWord('Sign In', WORDS_INTERFACE) !!}
                 </button>
             </div>
