@@ -71,17 +71,28 @@ class LoginController extends Controller
 
     protected function passwordMatches(Client $client, string $password): bool
     {
-        if (!empty($client->password) && Hash::check($password, $client->password)) {
+        if (!empty($client->password) && $this->isBcryptHash($client->password) && Hash::check($password, $client->password)) {
             return true;
         }
 
         if (!empty($client->password) && hash_equals($client->password, md5($password))) {
-            $client->password = $password;
+            $client->password = Hash::make($password);
             $client->save();
             return true;
         }
 
         return false;
+    }
+
+    protected function isBcryptHash(string $hashedValue): bool
+    {
+        if ($hashedValue === '') {
+            return false;
+        }
+
+        $hashInfo = password_get_info($hashedValue);
+
+        return ($hashInfo['algoName'] ?? null) === 'bcrypt' || str_starts_with($hashedValue, '$2y$');
     }
 
     protected function sendActivationMail(Client $client, Request $request): void
