@@ -4,6 +4,7 @@
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="session-code" content="{{ $page->sessionCode() }}">
 
     <title>{{ $page->meta('title') ?? config('app.name') }}</title>
     @if($page->meta('description'))
@@ -41,8 +42,11 @@
             headers: {
                 'X-CSRF-TOKEN': window.csrfToken,
                 'X-Requested-With': 'XMLHttpRequest',
+                'X-Session-Code': '{{ $page->sessionCode() }}',
             },
         });
+
+        window.sessionCode = '{{ $page->sessionCode() }}';
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/remodal/1.1.1/remodal.min.js"></script>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.js"></script> -->
