@@ -20,11 +20,12 @@ class CreditService
     }
 
     public static function format(
-        float $amount,
+        float   $amount,
         ?string $currencyCode = null,
-        bool $withSymbol = true,
-        bool $withStrongInt = true
-    ): string {
+        bool    $withSymbol = true,
+        bool    $withStrongInt = true
+    ): string
+    {
         $currency = CurrencyManager::get($currencyCode) ?? CurrencyManager::current() ?? CurrencyManager::default();
 
         $formatted = number_format($amount, $currency->decimals, '.', $currency->thousands_separator);
