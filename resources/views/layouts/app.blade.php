@@ -50,10 +50,8 @@
         let MODAL;
         $(function () {
             MODAL = new ModalManager({
-                actionCatalog: '/modal_contents',
-                urlParams: {
-                    lid: '10',
-                },
+                actionCatalog: '/modal',
+                laravel: true,
             });
         });
     </script>

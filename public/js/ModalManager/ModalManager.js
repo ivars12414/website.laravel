@@ -17,6 +17,7 @@ class ModalManager {
       zIndexBase: 1000,
       actionCatalog: '',
       urlParams: {},
+      laravel: false,
       ...options,
     };
 
@@ -183,8 +184,14 @@ class ModalManager {
 
     this.$modalSpinner.show();
 
+    const actionPath = this.defaultOptions.laravel
+      ? `${this.defaultOptions.actionCatalog}/${data.action}`
+      : `${this.defaultOptions.actionCatalog}/${data.action}.php`;
+
+    const normalizedActionPath = actionPath.replace(/([^:]\/)\/+/g, '$1');
+
     $.ajax({
-      url: this.buildUrl(`${this.defaultOptions.actionCatalog}/${data.action}.php`, this.defaultOptions.urlParams),
+      url: this.buildUrl(normalizedActionPath, this.defaultOptions.urlParams),
       type: 'POST',
       dataType: this.defaultOptions.htmlResponse ? 'HTML' : 'JSON',
       data,
