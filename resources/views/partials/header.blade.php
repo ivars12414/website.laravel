@@ -1,3 +1,7 @@
+@php
+    use App\Cart\CartManager;
+@endphp
+
 <header class="header js-header">
     <div class="container">
         <div class="header__wrapper">
