@@ -64,8 +64,8 @@ class ResolvePageContext
 
         if ($section) $context->setSection($section);
 
-        // Auth для разделов с requires_auth
-        if ($section && $section->requires_auth && !auth()->check()) {
+        // Auth для разделов с requires_auth или это раздел кабинета
+        if ($section && ((int)$section->auth_required || (int)$section->position === Section::POSITION_CABINET) && !auth()->check()) {
             return redirect()->route('login');
         }
 
