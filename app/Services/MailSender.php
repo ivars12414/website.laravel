@@ -5,10 +5,15 @@ namespace App\Services;
 use App\Models\TroubleshootingMail;
 use PHPMailer\PHPMailer\PHPMailer;
 
-$smtpDebugHtml = '';
-
 class MailSender
 {
+
+    /**
+     * Holds collected SMTP debug output for the current message.
+     *
+     * @var string
+     */
+    protected $smtpDebugHtml = '';
 
     public function send($to, $subject, $body, $from = '', $attachments = [], $smtpDebug = 4)
     {
@@ -19,7 +24,7 @@ class MailSender
             $mail->IsSMTP();
             $mail->SMTPDebug = $smtpDebug;
             $mail->Debugoutput = function ($str, $level) {
-                $GLOBALS['smtpDebugHtml'] .= date('Y-m-d H:i:s') . " {$level}: {$str}</br>";
+                $this->smtpDebugHtml .= date('Y-m-d H:i:s') . " {$level}: {$str}</br>";
             };
             $mail->Host = SMTP_CONFIGS['mail_smtp_host'];
             $mail->Port = SMTP_CONFIGS['mail_smtp_port'];
@@ -58,7 +63,7 @@ class MailSender
         $debug = $mail->ErrorInfo;
 
 //    if (!$result) {
-        TroubleshootingMail::saveLog($to, $subject, $body, $from, $result, $debug, $GLOBALS['smtpDebugHtml']);
+        TroubleshootingMail::saveLog($to, $subject, $body, $from, $result, $debug, $this->smtpDebugHtml);
 //    }
 
         return [
