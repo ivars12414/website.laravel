@@ -25,7 +25,26 @@
         $('body').on('click', 'input.error, .input__wrapper.error, textarea.textarea--error', function () {
             $(this).removeClass('error').removeClass('textarea--error').next('.js-input-error-msg').remove();
         });
-    })
+
+        new FormSubmit({
+            formSelector: '[data-add-to-cart]',
+            ajaxUrl: '/api/cart/add-product',
+            createDefaultAlerts: false,
+            successCallback: (r, {$form, $submit}) => {
+                $('[data-cart-items-qty]').html(r.summary.qty);
+                $form.find('[data-go-to-cart-btn]').show();
+                $submit.hide();
+                toastr.success(r.msg);
+
+                const cartDropBlock = document.querySelector('#cart-dropdown');
+                if (cartDropBlock && r.cart_dropdown !== undefined) {
+                    cartDropBlock.innerHTML = r.cart_dropdown;
+                }
+            },
+        });
+
+    });
+
 </script>
 
 @if(!isLoged())
@@ -41,14 +60,14 @@
 
                     // $('[data-go-to-cart-btn]').hide();
 
-            fetch('/api/cart/set-product-qty', {
-                method: 'POST',
-                body: new URLSearchParams(new FormData(itemForm)),
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRF-TOKEN': window.csrfToken,
-                },
-            })
+                    fetch('/api/cart/set-product-qty', {
+                        method: 'POST',
+                        body: new URLSearchParams(new FormData(itemForm)),
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': window.csrfToken,
+                        },
+                    })
                         .then(res => res.json())
                         .then(r => {
                             const summaryBlock = document.querySelector('.js-cart-summary-block');
@@ -72,14 +91,14 @@
 
                 let $this = $(this);
 
-            fetch('/api/cart/remove-item', {
-                method: 'POST',
-                body: new URLSearchParams({id: $this.data('remove-cart-item')}),
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRF-TOKEN': window.csrfToken,
-                },
-            })
+                fetch('/api/cart/remove-item', {
+                    method: 'POST',
+                    body: new URLSearchParams({id: $this.data('remove-cart-item')}),
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': window.csrfToken,
+                    },
+                })
                     .then(res => res.json())
                     .then(r => {
 
