@@ -8,6 +8,8 @@ use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\PromoCode;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class CartManager
 {
@@ -15,21 +17,53 @@ class CartManager
 
   protected static function getCart(?int $userId, ?string $sessionCode): Cart
   {
+    $userId = self::resolveUserId($userId);
+    $sessionCode = self::resolveSessionCode($sessionCode);
 
-    if (empty($userId) && isLoged()) {
-      $userId = (int)$_SESSION['login_id'];
-    }
-
-    if (empty($sessionCode) && !empty($_SESSION['session_code'])) {
-      $sessionCode = $_SESSION['session_code'];
-    }
-
-    if (!self::$cart) {
+    if (!self::$cart
+        || ($userId && self::$cart->user_id !== $userId)
+        || (!$userId && self::$cart->session_code !== $sessionCode)) {
       $locator = new CartLocatorService();
       self::$cart = $locator->getOrCreateCart($userId, $sessionCode);
     }
 
     return self::$cart;
+  }
+
+  protected static function resolveUserId(?int $userId): ?int
+  {
+    if ($userId) {
+      return $userId;
+    }
+
+    if (Auth::check()) {
+      return (int)Auth::id();
+    }
+
+    if (isLoged() && !empty($_SESSION['login_id'])) {
+      return (int)$_SESSION['login_id'];
+    }
+
+    return null;
+  }
+
+  protected static function resolveSessionCode(?string $sessionCode): string
+  {
+    if (!empty($sessionCode)) {
+      return $sessionCode;
+    }
+
+    $existingSessionCode = session('session_code') ?? ($_SESSION['session_code'] ?? '');
+
+    if (!empty($existingSessionCode)) {
+      return (string)$existingSessionCode;
+    }
+
+    $generated = (string)Str::uuid();
+    session(['session_code' => $generated]);
+    $_SESSION['session_code'] = $generated;
+
+    return $generated;
   }
 
   public static function addItem(
