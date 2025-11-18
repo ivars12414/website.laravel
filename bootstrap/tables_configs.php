@@ -82,9 +82,15 @@ const USERS_PERMISSION_ACTIONS = [
 
 // Получаем все конфигурации таблиц
 $tables_configs = [];
-$configs = \App\Models\TableConfig::all();
-foreach ($configs as $row) {
-    $tables_configs[$row->table] = json_decode($row->configs, true);
+if (class_exists(\App\Models\TableConfig::class) && \Illuminate\Database\Eloquent\Model::getConnectionResolver()) {
+    try {
+        $configs = \App\Models\TableConfig::all();
+        foreach ($configs as $row) {
+            $tables_configs[$row->table] = json_decode($row->configs, true);
+        }
+    } catch (\Throwable $e) {
+        // Skip loading table configurations if the database is unavailable during bootstrap.
+    }
 }
 
 // Настройки каталога
