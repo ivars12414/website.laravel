@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Models\Language;
 use App\Models\Section;
 use App\Support\PageContext;
+use App\Services\Currency\CurrencySelector;
 use App\Services\SessionCodeResolver;
 use App\Seo\SeoUrlManager;
 use Closure;
@@ -22,6 +23,9 @@ class ResolvePageContext
 
         $sessionCodeResolver = app(SessionCodeResolver::class);
         $context->setSessionCode($sessionCodeResolver->resolve($request));
+
+        $currencySelector = app(CurrencySelector::class);
+        $context->setCurrency($currencySelector->resolve($request));
 
         $segments = $request->segments();
 

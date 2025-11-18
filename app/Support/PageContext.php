@@ -2,6 +2,7 @@
 
 namespace App\Support;
 
+use App\Models\Currency;
 use App\Models\Language;
 use App\Models\Section;
 
@@ -23,6 +24,7 @@ class PageContext
     protected array $menus = [];
     protected string $bodyClass = '';
     protected string $sessionCode = '';
+    protected ?Currency $currency = null;
 
     public function setLanguage(Language $language): void
     {
@@ -121,5 +123,15 @@ class PageContext
     public function sessionCode(): string
     {
         return $this->sessionCode;
+    }
+
+    public function setCurrency(Currency $currency): void
+    {
+        $this->currency = $currency;
+    }
+
+    public function currency(): ?Currency
+    {
+        return $this->currency;
     }
 }

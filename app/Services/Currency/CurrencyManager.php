@@ -18,7 +18,11 @@ class CurrencyManager
 
   public static function current(): ?Currency
   {
-    return self::get($_SESSION['currency']['code'] ?? Currency::main()->code);
+    $code = session('currency.code')
+      ?? ($_SESSION['currency']['code'] ?? null)
+      ?? Currency::main()->code;
+
+    return self::get($code);
   }
 
   public static function default(): ?Currency
