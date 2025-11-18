@@ -3,6 +3,7 @@
 <head>
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ $page->meta('title') ?? config('app.name') }}</title>
     @if($page->meta('description'))
@@ -33,6 +34,16 @@
 
     <!-- JS -->
     <script src="/build/js/jquery.min.js"></script>
+    <script>
+        window.csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '';
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': window.csrfToken,
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        });
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/remodal/1.1.1/remodal.min.js"></script>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.js"></script> -->
     <!-- <script type="text/javascript" src="https://unpkg.com/aos@next/dist/aos.js"></script> -->

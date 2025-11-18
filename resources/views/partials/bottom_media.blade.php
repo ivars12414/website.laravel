@@ -41,13 +41,14 @@
 
                     // $('[data-go-to-cart-btn]').hide();
 
-                    fetch('/api/cart/set-product-qty', {
-                        method: 'POST',
-                        body: new URLSearchParams(new FormData(itemForm)),
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest',
-                        },
-                    })
+            fetch('/api/cart/set-product-qty', {
+                method: 'POST',
+                body: new URLSearchParams(new FormData(itemForm)),
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': window.csrfToken,
+                },
+            })
                         .then(res => res.json())
                         .then(r => {
                             const summaryBlock = document.querySelector('.js-cart-summary-block');
@@ -71,13 +72,14 @@
 
                 let $this = $(this);
 
-                fetch('/api/cart/remove-item', {
-                    method: 'POST',
-                    body: new URLSearchParams({id: $this.data('remove-cart-item')}),
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                    },
-                })
+            fetch('/api/cart/remove-item', {
+                method: 'POST',
+                body: new URLSearchParams({id: $this.data('remove-cart-item')}),
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': window.csrfToken,
+                },
+            })
                     .then(res => res.json())
                     .then(r => {
 
