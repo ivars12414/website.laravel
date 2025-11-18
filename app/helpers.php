@@ -338,3 +338,4 @@ function getEnglishMonthAndDayNames(): array
 }
 
 include_once __DIR__ . '/catalog_helpers.php';
+include_once __DIR__ . '/orders.php';

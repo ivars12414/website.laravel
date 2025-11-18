@@ -27,6 +27,23 @@
             <div class="header__block right">
                 @auth
                     <div class="header__actions hide-mobile">
+
+                        <div class="header__action">
+                            <div class="mini-cart">
+                                <a href="{{ sectionHref('cart') }}" class="mini-cart__link">
+                                    <img src="/images/cart.svg" alt="{!! returnWord('Cart icon', WORDS_PROJECT) !!}">
+                                    <span class="count"
+                                          data-cart-items-qty>{{ CartManager::getSummary()['qty'] }}</span>
+                                </a>
+                            </div>
+
+                            @if(section()->label !== 'cart')
+                                <div class="mini-cart__wrapper" id="cart-dropdown">
+                                    @include('partials.cart_dropdown', ['items' => CartManager::getItems(), 'summary' => CartManager::getSummary()])
+                                </div>
+                            @endif
+                        </div>
+
                         <div class="header__action">
                             <ul class="nav">
                                 <li class="nav__item with-sub">

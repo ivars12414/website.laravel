@@ -36,6 +36,20 @@ define('MODAL_MANAGER_V', USE_CACHE ? time() : 1);
 define('SCROLL_V', USE_CACHE ? time() : 1);
 define('SHOW_MORE_V', USE_CACHE ? time() : 1);
 
+const SOURCE_APPLICATION = 1;
+const SOURCE_SITE = 2;
+const SOURCE_INVITATION = 3;
+const SOURCE_APP_SITE = 4;
+const SOURCE_ADMIN = 5;
+
+const SOURCES = [
+    SOURCE_APPLICATION,
+    SOURCE_SITE,
+    SOURCE_INVITATION,
+    SOURCE_APP_SITE,
+    SOURCE_ADMIN,
+];
+
 require_once __DIR__ . '/../app/helpers.php';
 
 return Application::configure(basePath: dirname(__DIR__))
