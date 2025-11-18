@@ -22,6 +22,7 @@ class PageContext
     protected array $alternates = [];
     protected array $menus = [];
     protected string $bodyClass = '';
+    protected string $sessionCode = '';
 
     public function setLanguage(Language $language): void
     {
@@ -112,4 +113,13 @@ class PageContext
         return $this->bodyClass;
     }
 
+    public function setSessionCode(string $sessionCode): void
+    {
+        $this->sessionCode = $sessionCode;
+    }
+
+    public function sessionCode(): string
+    {
+        return $this->sessionCode;
+    }
 }

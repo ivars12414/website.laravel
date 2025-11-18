@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Models\Language;
 use App\Models\Section;
 use App\Support\PageContext;
+use App\Services\SessionCodeResolver;
 use App\Seo\SeoUrlManager;
 use Closure;
 use Illuminate\Http\Request;
@@ -18,6 +19,9 @@ class ResolvePageContext
 
         /** @var PageContext $context */
         $context = app(PageContext::class);
+
+        $sessionCodeResolver = app(SessionCodeResolver::class);
+        $context->setSessionCode($sessionCodeResolver->resolve($request));
 
         $segments = $request->segments();
 
