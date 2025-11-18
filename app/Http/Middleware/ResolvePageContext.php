@@ -66,7 +66,7 @@ class ResolvePageContext
 
         // Auth для разделов с requires_auth или это раздел кабинета
         if ($section && ((int)$section->auth_required || (int)$section->position === Section::POSITION_CABINET) && !auth()->check()) {
-            return redirect()->route('login');
+            return redirect()->to(sectionHref('', $language?->id ?? 0));
         }
 
         // Меню
