@@ -47,6 +47,7 @@ class CatalogRouteResolver
             $ctx->showCategories = $showCategories;
             [$ctx->items, $ctx->filterOptions] = $this->prepareItems(null, $filters, $showSubcategoryItems);
             $ctx->categories = $showCategories ? $this->categoryService->getVisibleChildren(null, $filters) : null;
+            $ctx->language = $language;
             return $ctx;
         }
 
@@ -62,6 +63,7 @@ class CatalogRouteResolver
             $ctx->sort = $sort;
             $ctx->showSubcategoryItems = $showSubcategoryItems;
             $ctx->showCategories = $showCategories;
+            $ctx->language = $language;
             return $ctx;
         }
 
@@ -78,6 +80,7 @@ class CatalogRouteResolver
             $ctx->showCategories = $showCategories;
             [$ctx->items, $ctx->filterOptions] = $this->prepareItems($category, $filters, $showSubcategoryItems);
             $ctx->categories = $showCategories ? $this->categoryService->getVisibleChildren($category, $filters) : null;
+            $ctx->language = $language;
             return $ctx;
         }
 
@@ -89,6 +92,7 @@ class CatalogRouteResolver
         $ctx->showCategories = $showCategories;
         [$ctx->items, $ctx->filterOptions] = $this->prepareItems(null, $filters, $showSubcategoryItems);
         $ctx->categories = $showCategories ? $this->categoryService->getVisibleChildren(null, $filters) : null;
+        $ctx->language = $language;
         return $ctx;
     }
 

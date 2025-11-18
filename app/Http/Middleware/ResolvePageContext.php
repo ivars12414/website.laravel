@@ -93,6 +93,8 @@ class ResolvePageContext
                 ->get(),
         ]);
 
+        $this->setSectionBodyClass($context);
+
         // SEO
         app(SeoUrlManager::class)->resolve($request);
 
@@ -100,4 +102,31 @@ class ResolvePageContext
 
         return $next($request);
     }
+
+    private function setSectionBodyClass(PageContext $context): void
+    {
+
+        $body_section_labels_classes = [
+            'news' => '',
+        ];
+
+        $body_section_types_classes = [
+            'main' => 'main',
+            'cabinet' => 'cabinet',
+            'text' => 'inside',
+            '404' => 'inside',
+        ];
+
+        if (!(int)$context->section()->main) {
+            if ((int)$context->section()->position === SECTION_CABINET) {
+                $context->setBodyClass($body_section_types_classes['cabinet']);
+            } else {
+                $context->setBodyClass($body_section_types_classes['text']);
+            }
+        } else {
+            $context->setBodyClass($body_section_types_classes['main']);
+        }
+
+    }
+
 }

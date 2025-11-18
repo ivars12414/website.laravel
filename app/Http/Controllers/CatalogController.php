@@ -55,7 +55,7 @@ class CatalogController extends Controller
     {
         $bc = [
 //            ['title' => 'Home', 'url' => route('home', absolute: false) ?? '/'],
-            ['title' => 'Catalog', 'url' => sectionHref('catalog', $ctx->language()->id)],
+            ['title' => 'Catalog', 'url' => sectionHref('catalog', $ctx->language->id)],
         ];
         if ($ctx->category) {
             foreach ($ctx->category->getParentsChain($lang) as $cat) {
@@ -70,7 +70,7 @@ class CatalogController extends Controller
     {
         $bc = [
 //            ['title' => 'Home', 'url' => route('home', absolute: false) ?? '/'],
-            ['title' => 'Catalog', 'url' => sectionHref('catalog', $ctx->language()->id)],
+            ['title' => 'Catalog', 'url' => sectionHref('catalog', $ctx->language->id)],
         ];
         foreach ($ctx->category->getParentsChain($lang) as $cat) {
             $bc[] = ['title' => $cat->getName($lang), 'url' => $cat->getUrl($lang)];

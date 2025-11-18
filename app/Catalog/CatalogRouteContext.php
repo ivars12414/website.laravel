@@ -19,10 +19,25 @@ class CatalogRouteContext
     public ?string $sort = null;
     public bool $showSubcategoryItems = false;
     public bool $showCategories = false;
+    public \App\Models\Language $language;
 
-    public function __construct(string $type) { $this->type = $type; }
+    public function __construct(string $type)
+    {
+        $this->type = $type;
+    }
 
-    public function isList(): bool { return $this->type === self::TYPE_LIST; }
-    public function isCategory(): bool { return $this->type === self::TYPE_CATEGORY; }
-    public function isItem(): bool { return $this->type === self::TYPE_ITEM; }
+    public function isList(): bool
+    {
+        return $this->type === self::TYPE_LIST;
+    }
+
+    public function isCategory(): bool
+    {
+        return $this->type === self::TYPE_CATEGORY;
+    }
+
+    public function isItem(): bool
+    {
+        return $this->type === self::TYPE_ITEM;
+    }
 }

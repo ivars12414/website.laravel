@@ -18,6 +18,26 @@ const WORDS_TYPES = [
     WORDS_INTERFACE => ['title_code' => 'Interface words'],
 ];
 
+const DATA_TYPES_MAPPING = [
+    1 => 'Data in Total',
+    2 => 'Daily Unlimited',
+    3 => 'Daily Limit (Service Cut-off)',
+    4 => 'Daily Full Unlimited',
+];
+
+const ACTIVATION_CODE_RESEND_COUNTDOWN = 50; //seconds
+
+const USE_CACHE = true;
+
+define('FORM_SUBMIT_V', USE_CACHE ? time() : 2);
+define('INPUT_MASK_V', USE_CACHE ? time() : 1);
+define('INPUT_VALIDATOR_V', USE_CACHE ? time() : 1);
+define('MODAL_MANAGER_V', USE_CACHE ? time() : 1);
+define('SCROLL_V', USE_CACHE ? time() : 1);
+define('SHOW_MORE_V', USE_CACHE ? time() : 1);
+
+require_once __DIR__ . '/tables_configs.php';
+
 require_once __DIR__ . '/../app/helpers.php';
 
 return Application::configure(basePath: dirname(__DIR__))

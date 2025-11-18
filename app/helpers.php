@@ -3,6 +3,7 @@
 use App\Models\Language;
 use App\Models\Section;
 use App\Models\Settings;
+use App\Services\Currency\CurrencyAmount;
 use App\Support\LC;
 use App\Support\PageContext;
 use App\Support\SectionsCache;
@@ -277,6 +278,45 @@ function returnWord($code, $type = 99, $vars = [])
         return str_replace(array_keys($vars), array_values($vars), LC::getInstance()->getOne($code));
     } else {
         return LC::getInstance()->getOne($code);
+    }
+}
+
+function isLoged(): bool
+{
+    return !empty($_SESSION["login_id"]) && $_SESSION['login_id'] > 0;
+}
+
+function currency($amount, $from = null): CurrencyAmount
+{
+    return new CurrencyAmount($amount, $from);
+}
+
+function getIp(): string
+{
+    $keys = [
+        'HTTP_CLIENT_IP',
+        'HTTP_X_FORWARDED_FOR',
+        'REMOTE_ADDR'
+    ];
+    foreach ($keys as $key) {
+        if (!empty($_SERVER[$key])) {
+            $exp = explode(',', $_SERVER[$key]);
+            $ip = trim(end($exp));
+            if (filter_var($ip, FILTER_VALIDATE_IP)) {
+                return $ip;
+            }
+        }
+    }
+
+    return '';
+}
+
+function copyrightDate($start)
+{
+    if ($start == date("Y")) {
+        return date("Y");
+    } else {
+        return $start . " - " . date("Y");
     }
 }
 

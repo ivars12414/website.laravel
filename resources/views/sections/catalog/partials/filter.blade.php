@@ -1,55 +1,55 @@
-@php
-    $durations = collect($filterOptions['durations'] ?? [])->filter();
-    $volumes = collect($filterOptions['volumes'] ?? [])->filter();
-    $dataTypes = collect($filterOptions['dataTypes'] ?? [])->filter();
-@endphp
+<form class="filter__form" data-form="filter">
+    <input type="hidden" name="category" value="{{ $currentCategory->slug }}">
+    <input data-page-input type="hidden" name="page" value="{{ $_GET['page'] ??'' }}">
 
-<form method="get" action="{{ url()->current() }}" class="catalog-filter" data-form="filter">
-    <div class="catalog-filter__grid">
-        <div class="catalog-filter__field">
-            <label class="label">{!! returnWord('Duration', WORDS_INTERFACE) !!}</label>
-            <select name="duration" class="js-select" data-placeholder="{!! returnWord('Any', WORDS_INTERFACE) !!}">
-                <option value="">{!! returnWord('Any', WORDS_INTERFACE) !!}</option>
-                @foreach($durations as $duration)
-                    <option value="{{ $duration }}" @selected(($filters['duration'] ?? '') == $duration)>
-                        {{ $duration }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-
-        <div class="catalog-filter__field">
-            <label class="label">{!! returnWord('Volume', WORDS_INTERFACE) !!}</label>
-            <select name="volume" class="js-select" data-placeholder="{!! returnWord('Any', WORDS_INTERFACE) !!}">
-                <option value="">{!! returnWord('Any', WORDS_INTERFACE) !!}</option>
-                @foreach($volumes as $volume)
-                    <option value="{{ $volume }}" @selected(($filters['volume'] ?? '') == $volume)>
-                        {{ $volume }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-
-        <div class="catalog-filter__field">
-            <label class="label">{!! returnWord('Data type', WORDS_INTERFACE) !!}</label>
-            <select name="data_type" class="js-select" data-placeholder="{!! returnWord('Any', WORDS_INTERFACE) !!}">
-                <option value="">{!! returnWord('Any', WORDS_INTERFACE) !!}</option>
-                @foreach($dataTypes as $dataType)
-                    <option value="{{ $dataType }}" @selected(($filters['data_type'] ?? '') == $dataType)>
-                        {{ $dataType }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-
-        <div class="catalog-filter__field">
-            <label class="label">{!! returnWord('Search', WORDS_INTERFACE) !!}</label>
-            <input type="text" name="search" value="{{ $filters['search'] ?? '' }}" placeholder="{!! returnWord('Search', WORDS_INTERFACE) !!}">
-        </div>
+    <div class="filter__item">
+        <label for="filter_name" class="label">{!! returnWord('Name', WORDS_PROJECT) !!}</label>
+        <input type="text" class="input" id="filter_name" name="search" value="{{ $ctx->filters['search'] ?? '' }}">
     </div>
 
-    <div class="catalog-filter__actions">
-        <button type="submit" class="btn btn--main">{!! returnWord('Apply', WORDS_INTERFACE) !!}</button>
-        <a href="{{ url()->current() }}" class="btn btn--o-main">{!! returnWord('Reset', WORDS_INTERFACE) !!}</a>
+    <div class="filter__item">
+        <label for="filter_duration" class="label">{!! returnWord('Duration (days)', WORDS_PROJECT) !!}</label>
+        <div class="select">
+            <select name="duration" id="filter_duration">
+                <option value="">{!! returnWord('All', WORDS_INTERFACE) !!}</option>
+                @foreach($filterOptions['durations'] as $duration)
+                    <option
+                        value="{{ $duration }}" @selected(isset($ctx->filters['duration']) && $duration == $ctx->filters['duration'])>{{ $duration }}</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+    <div class="filter__item">
+        <label for="filter_data" class="label">{!! returnWord('Data', WORDS_PROJECT) !!}</label>
+        <div class="select">
+            <select name="volume" id="filter_data">
+                <option value="">{!! returnWord('All', WORDS_INTERFACE) !!}</option>
+                @foreach($filterOptions['volumes'] as $volume)
+                    <option
+                        value="{{ $volume }}"
+                        @selected(isset($ctx->filters['volume']) && $volume == $ctx->filters['volume'])>
+                        {{ \Illuminate\Support\Number::fileSize(bytes: $volume ?? 0, maxPrecision: 0) }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+    <div class="filter__item">
+        <label for="filter_data_type" class="label">{!! returnWord('Data type', WORDS_PROJECT) !!}</label>
+        <div class="select">
+            <select name="data_type" id="filter_data_type">
+                <option value="">{!! returnWord('All', WORDS_INTERFACE) !!}</option>
+                @foreach($filterOptions['dataTypes'] as $data_type)
+                    <option
+                        value="{{ $data_type }}" @selected(isset($ctx->filters['data_type']) && $data_type == $ctx->filters['data_type'])>{!! returnWord(DATA_TYPES_MAPPING[$data_type] ?? "Data type $data_type", WORDS_PROJECT) !!}</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+    <div class="filter__item actions">
+        <button class="btn btn--main" type="submit"
+                data-page-link="1">{!! returnWord('Filter', WORDS_PROJECT) !!}</button>
+        <a href="{{ $currentCategory->link }}"
+           class="btn btn--o-main">{!! returnWord('Cancel', WORDS_PROJECT) !!}</a>
     </div>
 </form>

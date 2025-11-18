@@ -46,10 +46,24 @@
           integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g=="
           crossorigin="anonymous" referrerpolicy="no-referrer">
 
+    <script>
+        let MODAL;
+        $(function () {
+            MODAL = new ModalManager({
+                actionCatalog: '/modal_contents',
+                urlParams: {
+                    lid: '10',
+                },
+            });
+        });
+    </script>
+
+    <link rel="stylesheet" href="/css/loading.css?v=3">
+
 </head>
-<body>
-<div id='app'>
-    @yield('content')
-</div>
+<body class="{{ $page->bodyClass() }}" id='app'>
+@yield('content')
+@include('partials.bottom_media')
+@yield('js')
 </body>
 </html>

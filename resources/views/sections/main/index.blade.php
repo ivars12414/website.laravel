@@ -13,12 +13,13 @@
                 <div class="container">
                     <div class="intro__wrapper">
                         <div class="intro__content">
-                            <div class="intro__subtitle js-title"><span>main intro subtitle</span>
+                            <div class="intro__subtitle js-title">
+                                <span>{!! returnWord('main intro subtitle', WORDS_PROJECT) !!}</span>
                             </div>
-                            <div class="intro__title">main intro title</div>
-                            <div class="intro__text">main intro text</div>
+                            <div class="intro__title">{!! returnWord('main intro title', WORDS_PROJECT) !!}</div>
+                            <div class="intro__text">{!! returnWord('main intro text', WORDS_PROJECT) !!}</div>
                             <a href="#" class="btn btn--main" data-modal-caller data-action="auth/login"
-                               data-cache>main intro button text</a>
+                               data-cache>{!! returnWord('main intro button text', WORDS_PROJECT) !!}</a>
                         </div>
                     </div>
                 </div>
@@ -52,7 +53,8 @@
 
                                         <div class="countries__content">
                                             <div class="countries__name">{{ $category->name }}</div>
-                                            {{--                  <span class="btn btn--o-main">{!! returnWord('from %PRICE%', WORDS_INTERFACE, ['%PRICE%' => currency($category->min_price)->convert()->format(withStrongInt: false)]) !!}</span>--}}
+                                            <span
+                                                class="btn btn--o-main">{!! returnWord('from %PRICE%', WORDS_INTERFACE, ['%PRICE%' => currency($category->min_price)->convert()->format(withStrongInt: false)]) !!}</span>
                                             <span class="btn btn--o-main"></span>
                                         </div>
                                     </a>
