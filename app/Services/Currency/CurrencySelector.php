@@ -3,46 +3,82 @@
 namespace App\Services\Currency;
 
 use App\Models\Currency;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 
 class CurrencySelector
 {
-  public static function boot(): void
-  {
-    if (!isset($_SESSION['currency']) || empty($_SESSION['currency']['code'])) {
-//      $currency = self::resolveCurrencyByGeo() ?? Currency::main();
-      $currency = Currency::main();
+    public const COOKIE_KEY = 'currency';
 
-      $_SESSION['currency'] = [
-              'code' => $currency->code,
-              'value' => $currency->value,
-              'decimals' => $currency->decimals,
-              'symbol' => $currency->symbol,
-              'symbol_position' => $currency->symbol_position,
-              'thousands_separator' => $currency->thousands_separator,
-      ];
+    public function resolve(Request $request): Currency
+    {
+        $currency = $this->resolveFromQuery($request)
+            ?? $this->resolveFromProfile()
+            ?? $this->resolveFromCookie($request)
+            ?? Currency::main();
+
+        $this->rememberSelection($request, $currency);
+
+        return $currency;
     }
-  }
 
-  protected static function resolveCurrencyByGeo(): ?Currency
-  {
-    $countryCode = self::detectCountryCode();
-    if (!$countryCode) return null;
+    protected function resolveFromQuery(Request $request): ?Currency
+    {
+        $code = $request->query('currency');
 
-    return Currency::where('country_code', $countryCode)->first();
-  }
-
-  protected static function detectCountryCode(): ?string
-  {
-    $ip = $_SERVER['REMOTE_ADDR'] ?? null;
-    if (!$ip || $ip === '127.0.0.1') return null;
-
-    // Пример: использование библиотеки geoip2/geoip2 (предпочтительно через DI)
-    try {
-      $reader = new \GeoIp2\Database\Reader(__DIR__ . '/../../storage/GeoLite2-Country.mmdb');
-      $record = $reader->country($ip);
-      return $record->country->isoCode ?? null;
-    } catch (\Throwable $e) {
-      return null;
+        return $this->findActiveCurrency($code);
     }
-  }
+
+    protected function resolveFromProfile(): ?Currency
+    {
+        $user = Auth::guard('client')->user() ?? Auth::user();
+        $code = $user?->currency ?? $user?->currency_code ?? null;
+
+        return $this->findActiveCurrency($code);
+    }
+
+    protected function resolveFromCookie(Request $request): ?Currency
+    {
+        $code = $request->cookie(self::COOKIE_KEY);
+
+        return $this->findActiveCurrency($code);
+    }
+
+    protected function rememberSelection(Request $request, Currency $currency): void
+    {
+        $request->session()->put('currency', [
+            'code' => $currency->code,
+            'value' => $currency->value,
+            'decimals' => $currency->decimals,
+            'symbol' => $currency->symbol,
+            'symbol_position' => $currency->symbol_position,
+            'thousands_separator' => $currency->thousands_separator,
+        ]);
+
+        $minutes = config('session.lifetime');
+
+        Cookie::queue(
+            cookie(
+                self::COOKIE_KEY,
+                $currency->code,
+                $minutes,
+                '/',
+                null,
+                (bool) config('session.secure'),
+                true,
+                false,
+                config('session.same_site')
+            )
+        );
+    }
+
+    protected function findActiveCurrency(?string $code): ?Currency
+    {
+        if (!$code) {
+            return null;
+        }
+
+        return Currency::where('status', '1')->where('code', $code)->first();
+    }
 }
