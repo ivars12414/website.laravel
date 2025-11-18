@@ -8,11 +8,14 @@ use App\Support\PageContext;
 use App\Seo\SeoUrlManager;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ResolvePageContext
 {
     public function handle(Request $request, Closure $next)
     {
+        Auth::shouldUse('client');
+
         /** @var PageContext $context */
         $context = app(PageContext::class);
 
