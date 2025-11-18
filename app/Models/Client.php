@@ -3,14 +3,19 @@
 namespace App\Models;
 
 use App\Models\InfoBlocks\ClientLevel;
+use Illuminate\Auth\Authenticatable as AuthenticatableTrait;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Notifications\Notifiable;
 
-class Client extends BaseModel
+class Client extends BaseModel implements Authenticatable
 {
     // Указываем имя таблицы в базе данных
     protected $table = 'cl_clients';
 
     use SoftDeletes;
+    use AuthenticatableTrait;
+    use Notifiable;
 
     protected $guarded = [
         'id',
@@ -18,6 +23,12 @@ class Client extends BaseModel
 
     protected $casts = [
         'birthday' => 'date:Y-m-d',
+        'password' => 'hashed',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
     ];
 
     const string CREATED_AT = 'reg_tm';
