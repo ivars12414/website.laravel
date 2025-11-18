@@ -36,8 +36,6 @@ define('MODAL_MANAGER_V', USE_CACHE ? time() : 1);
 define('SCROLL_V', USE_CACHE ? time() : 1);
 define('SHOW_MORE_V', USE_CACHE ? time() : 1);
 
-require_once __DIR__ . '/tables_configs.php';
-
 require_once __DIR__ . '/../app/helpers.php';
 
 return Application::configure(basePath: dirname(__DIR__))
