@@ -9,16 +9,15 @@ class CartLocatorService
   public function getOrCreateCart(?int $userId, ?string $sessionCode): Cart
   {
     $query = Cart::query()->where('status', Cart::STATUS_DRAFT);
+    $cart = null;
 
     if ($userId) {
-      $query->where('user_id', $userId);
-    } elseif ($sessionCode) {
-      $query->where('session_code', $sessionCode);
-    } else {
-      throw new \RuntimeException('Neither user_id nor session_code provided');
+      $cart = (clone $query)->where('user_id', $userId)->first();
     }
 
-    $cart = $query->first();
+    if (empty($cart) && $sessionCode) {
+      $cart = (clone $query)->where('session_code', $sessionCode)->first();
+    }
 
     if (!$cart) {
       $cart = new Cart([
@@ -26,6 +25,16 @@ class CartLocatorService
               'user_id' => (int)$userId,
               'session_code' => $sessionCode,
       ]);
+      $cart->save();
+    }
+
+    if ($userId && !$cart->user_id) {
+      $cart->user_id = $userId;
+      $cart->save();
+    }
+
+    if (!$cart->session_code && $sessionCode) {
+      $cart->session_code = $sessionCode;
       $cart->save();
     }
 
