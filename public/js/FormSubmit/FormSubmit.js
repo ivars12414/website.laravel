@@ -176,10 +176,17 @@ class FormSubmit {
       },
       success: (response) => this.handleResponse(response, $form, $submit, $spinner),
       error: (xhr, status, error) => {
-        // Обработка ошибок AJAX запроса
-        this.showAlert('default', 'Произошла ошибка при отправке формы.', this.errorClass);
-        $spinner.hide();
-        $submit.prop('disabled', false);
+        // Обработка ошибок AJAX запроса с попыткой вывести ответ сервера
+        const response = this.extractErrorResponse(xhr);
+
+        if (response) {
+          // Прогоняем ответ через стандартный обработчик, чтобы отрисовать ошибки
+          this.handleResponse(response, $form, $submit, $spinner);
+        } else {
+          this.showAlert('default', 'Произошла ошибка при отправке формы.', this.errorClass);
+          $spinner.hide();
+          $submit.prop('disabled', false);
+        }
       },
       complete: () => {
         if (this.afterSendCallback) {
@@ -260,6 +267,24 @@ class FormSubmit {
         this.errorCallback(response, { $form, $submit, $spinner });
       }
     }
+  }
+
+  extractErrorResponse(xhr) {
+    let response = xhr.responseJSON ?? null;
+
+    if (!response && xhr.responseText) {
+      try {
+        response = JSON.parse(xhr.responseText);
+      } catch (e) {
+        response = null;
+      }
+    }
+
+    if (response && typeof response.error === 'undefined') {
+      response.error = true;
+    }
+
+    return response;
   }
 
   setAutoHideAlert($alert) {
