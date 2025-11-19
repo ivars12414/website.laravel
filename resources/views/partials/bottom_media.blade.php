@@ -47,7 +47,7 @@
 
 </script>
 
-@if(!isLoged())
+@if(!auth()->check())
     @include('partials.auth_js')
 @else
     <script src="/js/ItemQuantitySelector/ItemQuantitySelector.js?v=1.<?= time() ?>"></script>

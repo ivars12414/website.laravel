@@ -1,0 +1,50 @@
+<?php
+
+namespace App\Payment\Handlers;
+
+use App\Models\CreditsTransaction;
+use App\Models\Payment;
+use App\Models\Status;
+use App\Models\StatusReason;
+use App\Payment\Contracts\PaymentEntityHandlerInterface;
+
+class TopUpPaymentHandler implements PaymentEntityHandlerInterface
+{
+  public function handleStatusChange(Payment $payment, Status $status): void
+  {
+    $transaction = CreditsTransaction::find($payment->order_id);
+    if (!$transaction) throw new \Exception('Transaction not found');
+    switch ($status->label) {
+      case 'paid':
+        $transaction->setStatus(
+                status: Status::findByLabel('completed', 'top_up'),
+                source: SOURCE_SITE
+        );
+        break;
+      case 'refunded':
+        $canceledStatus = Status::findByLabel('canceled', 'top_up');
+        $transaction->setStatus(
+                status: $canceledStatus,
+                source: SOURCE_SITE,
+                reason_hash: StatusReason::findByLabel('refunded', $canceledStatus)->hash
+        );
+        break;
+      case 'canceled':
+        $canceledStatus = Status::findByLabel('canceled', 'top_up');
+        $transaction->setStatus(
+                status: $canceledStatus,
+                source: SOURCE_SITE,
+                reason_hash: StatusReason::findByLabel('by_client', $canceledStatus)->hash
+        );
+        break;
+      case 'declined':
+        $canceledStatus = Status::findByLabel('canceled', 'top_up');
+        $transaction->setStatus(
+                status: $canceledStatus,
+                source: SOURCE_SITE,
+                reason_hash: StatusReason::findByLabel('declined', $canceledStatus)->hash
+        );
+        break;
+    }
+  }
+}

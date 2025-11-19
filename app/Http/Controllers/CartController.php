@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Cart\CartManager;
+use App\Models\Payment;
+use App\Payment\PaymentService;
 use App\Support\PageContext;
 use Illuminate\Http\Request;
 
-class CartSectionController extends Controller
+class CartController extends Controller
 {
     public function handle(Request $request, PageContext $context)
     {
@@ -29,6 +31,7 @@ class CartSectionController extends Controller
             'page' => $context,
             'items' => $items,
             'summary' => $summary,
+            'payment_methods_block' => new PaymentService()->paymentMethodBlock(Payment::ORDER_TYPE_ORDER),
         ]);
     }
 }
