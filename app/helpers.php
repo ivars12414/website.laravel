@@ -281,11 +281,6 @@ function returnWord($code, $type = 99, $vars = [])
     }
 }
 
-function isLoged(): bool
-{
-    return !empty($_SESSION["login_id"]) && $_SESSION['login_id'] > 0;
-}
-
 function currency($amount, $from = null): CurrencyAmount
 {
     return new CurrencyAmount($amount, $from);
