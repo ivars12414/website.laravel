@@ -40,10 +40,6 @@ class CartManager
       return (int)Auth::id();
     }
 
-    if (isLoged() && !empty($_SESSION['login_id'])) {
-      return (int)$_SESSION['login_id'];
-    }
-
     return null;
   }
 
