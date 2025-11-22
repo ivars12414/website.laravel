@@ -347,29 +347,9 @@ if (!function_exists('generateNumberString')) {
     }
 }
 
-function getDomainWithPrefix()
+function getDomainAndHttpHost()
 {
-    // Получение текущего хоста
-    $host = $_SERVER['HTTP_HOST'];
-
-    // Проверка наличия протокола HTTPS
-    $https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
-
-    // Проверка наличия префикса "www"
-    $www = (strpos($host, 'www.') !== 0);
-
-    // Добавление протокола HTTPS и префикса "www" при необходимости
-    if ($https) {
-        $protocol = 'https://';
-    } else {
-        $protocol = 'http://';
-    }
-
-    if ($www) {
-        $host = 'www.' . $host;
-    }
-
-    return $protocol . $host;
+    return request()->getSchemeAndHttpHost();
 }
 
 include_once __DIR__ . '/catalog_helpers.php';

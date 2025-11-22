@@ -26,7 +26,9 @@ class HandleCreditsTopUp
         }
 
         $paymentService = new PaymentService();
-        $paymentService->updatePaymentStatusByGatewayPaymentId($session['id'], 'paid', 'payments');
+        $paymentService->updatePaymentStatusByGatewayPaymentId($session['id'], 'paid', 'payments', [
+            'source' => SOURCE_SITE
+        ]);
 
     }
 }

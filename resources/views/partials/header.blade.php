@@ -78,7 +78,7 @@
                                             @endforelse
                                             <li class="nav__submenu-item logout"
                                                 title="{!! returnWord('Log out', WORDS_PROJECT) !!}">
-                                                <a href="#" data-modal-caller data-action="auth/logout" data-cache>
+                                                <a href="{!! sectionHref('logout') !!}">
                                                     {!! returnWord('Log out', WORDS_PROJECT) !!}
                                                 </a>
                                             </li>
@@ -142,7 +142,7 @@
                                         @endforelse
                                         <li class="nav__submenu-item logout"
                                             title="{!! returnWord('Log out', WORDS_PROJECT) !!}">
-                                            <a href="#" data-modal-caller data-action="auth/logout" data-cache>
+                                            <a href="{!! sectionHref('logout') !!}">
                                                 {!! returnWord('Log out', WORDS_PROJECT) !!}
                                             </a>
                                         </li>

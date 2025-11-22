@@ -34,7 +34,7 @@ class ActivationController extends Controller
             return $this->errorResponse('Invalid activation code', 400);
         }
 
-        $client->status = 1;
+        $client->status = '1';
         $client->save();
 
         Auth::login($client);

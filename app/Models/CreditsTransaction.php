@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Dompdf\Dompdf;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class CreditsTransaction extends BaseModel
 {
@@ -47,13 +48,21 @@ class CreditsTransaction extends BaseModel
      */
     public function setStatus(Status $status, int $source, string $reason_hash = '', array $add_data = []): static
     {
+        Log::info('[CreditsTransaction] setStatus', [
+            'id' => $this->id,
+            'add_data' => $add_data,
+        ]);
+
         if ($this->status()->exists()) {
             if (empty($this->status->next_statuses)) throw new \Exception('Current status is final');
             if (!in_array($status->id, $this->status->next_statuses ?? [])) throw new \Exception('Cannot change to this status');
         }
 
+
         $this->status()->associate($status);
         $this->save();
+
+        Log::info('[CreditsTransaction] setStatus - status saved');
 
         StatusLog::logChange($this->id, $status, 0, $source, $reason_hash, $add_data);
 
@@ -151,7 +160,7 @@ class CreditsTransaction extends BaseModel
         if (empty($this->pdf)) {
             $this->generateInvoice();
         }
-        $pdf[] = $_SERVER['DOCUMENT_ROOT'] . $this->pdf;
+        $pdf[] = resource_path($this->pdf);
         return Mail::send_mail_template($this->lang_id, 'top_up_confirm', $to, $mail_vars, $pdf);
     }
 

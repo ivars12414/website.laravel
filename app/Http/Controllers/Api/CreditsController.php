@@ -64,9 +64,9 @@ class CreditsController extends Controller
                 $transaction->price_in_currency,
                 $transaction->currency_code,
                 [
-                    'success' => "https://" . SITEMAP_CONFIGS['site_domain'] . sectionHref('balance') . "?tx=%tx_id%",
-                    'cancel' => "https://" . SITEMAP_CONFIGS['site_domain'] . sectionHref('balance') . "?tx=%tx_id%",
-                    'failed' => "https://" . SITEMAP_CONFIGS['site_domain'] . sectionHref('balance') . "?tx=%tx_id%",
+                    'success' => getDomainAndHttpHost() . sectionHref('balance', $transaction->lang_id) . "?tx=%tx_id%",
+                    'cancel' => getDomainAndHttpHost() . sectionHref('balance', $transaction->lang_id) . "?tx=%tx_id%",
+                    'failed' => getDomainAndHttpHost() . sectionHref('balance', $transaction->lang_id) . "?tx=%tx_id%",
                 ]
             );
 

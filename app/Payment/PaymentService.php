@@ -117,7 +117,7 @@ class PaymentService
         // Уведомляем сущность через handler из registry
         $handler = PaymentHandlerRegistry::resolve($payment->type);
         if ($handler) {
-            $handler->handleStatusChange($payment, $status);
+            $handler->handleStatusChange($payment, $status, (int)$add_data['source'] ?? 0);
         }
 
         return ['error' => false, 'msg' => 'Payment status changed'];

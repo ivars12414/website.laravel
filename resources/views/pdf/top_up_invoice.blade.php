@@ -154,7 +154,7 @@
 
                 <tr>
                     <td style="font-weight: 700; font-size: 14px; color: #9399C5;"><a
-                            href="{!! getDomainWithPrefix() . sectionHref('privacy') !!}"
+                            href="{!! getDomainAndHttpHost() . sectionHref('privacy') !!}"
                             style="text-decoration: none; color: #000;"
                             target="_blank">Privacy
                             policy</a></td>
