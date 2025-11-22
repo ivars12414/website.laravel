@@ -68,7 +68,6 @@ class Mail extends BaseModel
             $mailSender = new MailSender();
             $mailSender->send($to, $subject, $html, $from, $attachments);
 
-
         }
 
         return ['error' => $error, 'msg' => $msg];

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Payment;
+use App\Payment\PaymentService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -13,6 +15,7 @@ class ModalContentController extends Controller
         return match ($action) {
             'auth/login' => $this->login(),
             'auth/activation' => $this->activation($request),
+            'credits/top_up' => $this->topUp($request),
             default => response()->json(['message' => 'Modal content not found'], 404),
         };
     }
@@ -35,4 +38,14 @@ class ModalContentController extends Controller
             ])->render(),
         ]);
     }
+
+    protected function topUp(Request $request): JsonResponse
+    {
+        return response()->json([
+            'html' => view('modals.credits.top_up', [
+                'payment_methods_block' => new PaymentService()->paymentMethodBlock(Payment::ORDER_TYPE_TOP_UP),
+            ])->render(),
+        ]);
+    }
+
 }

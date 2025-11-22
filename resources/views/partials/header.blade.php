@@ -66,8 +66,7 @@
                                                     'logout' => $section->label === 'logout',
                                                 ])
                                                     title="{{ $section->name }}">
-                                                    <a href="{{ $section->getUrl() }}" data-modal-caller
-                                                       data-action="cabinet/{{ $section->label }}" data-cache>
+                                                    <a href="{{ $section->getUrl() }}">
                                                         {{ $section->name }}
                                                     </a>
                                                 </li>
@@ -131,8 +130,7 @@
                                                 'logout' => $section->label === 'logout',
                                             ])
                                                 title="{{ $section->name }}">
-                                                <a href="{{ $section->getUrl() }}" data-modal-caller
-                                                   data-action="cabinet/{{ $section->label }}" data-cache>
+                                                <a href="{{ $section->getUrl() }}">
                                                     {{ $section->name }}
                                                 </a>
                                             </li>

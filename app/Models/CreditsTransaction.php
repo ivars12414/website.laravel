@@ -54,20 +54,20 @@ class CreditsTransaction extends BaseModel
         $this->status()->associate($status);
         $this->save();
 
-        StatusLog::logChange($this->id, $status, (int)$_SESSION['login_id'], $source, $reason_hash, $add_data);
+        StatusLog::logChange($this->id, $status, 0, $source, $reason_hash, $add_data);
 
         switch ($status->label) {
-            case 'completed':
+            case 'credited':
                 $this->client->changeBalance($this->credits, BalanceLog::TYPE_CREDIT_TRANSACTION, $this->id);
                 $this->sendMailToClient();
 
-                $tgStartText = 'Top up completed - ';
-                $tgText = [];
-                $tgText[] = 'E-mail: ' . $this->client->mail;
-                $tgText[] = 'IP: ' . getIp();
-                $tgText[] = 'Transaction Nr: ' . $this->nr;
-                $tgText[] = 'Total amount: ' . currency($this->price_in_currency, $this->currency_code)->format(withStrongInt: false);
-                insertTelegramNotification($tgStartText . implode(". ", $tgText));
+//                $tgStartText = 'Top up completed - ';
+//                $tgText = [];
+//                $tgText[] = 'E-mail: ' . $this->client->mail;
+//                $tgText[] = 'IP: ' . getIp();
+//                $tgText[] = 'Transaction Nr: ' . $this->nr;
+//                $tgText[] = 'Total amount: ' . currency($this->price_in_currency, $this->currency_code)->format(withStrongInt: false);
+//                insertTelegramNotification($tgStartText . implode(". ", $tgText));
                 break;
         }
 
@@ -77,9 +77,7 @@ class CreditsTransaction extends BaseModel
     protected static function generateTransactionNumber(): string
     {
         do {
-
             $number = generateNumberString(10);
-
         } while (self::where('nr', $number)->exists());
 
         return $number;
@@ -87,7 +85,7 @@ class CreditsTransaction extends BaseModel
 
     public function generateInvoice(): static
     {
-        $folder = "/userfiles/top_ups_credits/pdf";
+        $folder = "/userfiles/credits_credits/pdf";
 
         $transaction = $this;
 
@@ -95,17 +93,16 @@ class CreditsTransaction extends BaseModel
 
         $contacts = Contacts::where('lang_id', $transaction->lang_id)->first();
 
-
         if (!empty($transaction->pdf)) {
             @unlink(base_path($transaction->pdf));
         }
 
-        ini_set('display_errors', 0);
-        ob_start();
-        include base_path("/modules/pdf_html/invoice.php");
-        $html = ob_get_contents();
-        ob_clean();
-        ob_end_clean();
+        // рендерим Blade-шаблон в HTML
+        $html = view('pdf.top_up_invoice', [
+            'transaction' => $transaction,
+            'client' => $client,
+            'contacts' => $contacts,
+        ])->render();
 
         $tmp = sys_get_temp_dir();
         $dompdf = new Dompdf([
@@ -164,6 +161,6 @@ class CreditsTransaction extends BaseModel
      */
     public function getStatusLogsAttribute(): ?Collection
     {
-        return \App\Models\StatusLog::category(\App\Models\StatusCategory::findByLabel('top_up'))->where('order_id', $this->id)->orderBy('id', 'desc')->get();
+        return \App\Models\StatusLog::category(\App\Models\StatusCategory::findByLabel('credits'))->where('order_id', $this->id)->orderBy('id', 'desc')->get();
     }
 }

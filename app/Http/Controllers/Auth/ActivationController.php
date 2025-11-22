@@ -37,10 +37,8 @@ class ActivationController extends Controller
         $client->status = 1;
         $client->save();
 
-        Auth::shouldUse('client');
-        Auth::guard('client')->login($client);
+        Auth::login($client);
         session(['login_id' => $client->id]);
-        $_SESSION['login_id'] = $client->id;
 
         $redirectHref = $request->input('success_href') ?: sectionHref('profile');
 

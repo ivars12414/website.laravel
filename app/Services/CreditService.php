@@ -45,4 +45,13 @@ class CreditService
             default => $formatted,
         };
     }
+
+    static public function convertFromFiat(int|float $fiat_sum, $currency_code = null): float
+    {
+        $currency_code = $currency_code ?: session('currency.code');
+
+        $credit_price = getConfig('token_price') > 0 ? getConfig('token_price') : 0.01;
+
+        return (float)currency($fiat_sum / $credit_price)->convert($currency_code)->format(false);
+    }
 }

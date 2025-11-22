@@ -15,7 +15,7 @@ class CartController extends Controller
 
         $sessionCode = $this->resolveSessionCode($request);
 
-        CartManager::addItem('product', (string) $data['item_id'], (int) $data['quantity'], [], null, $sessionCode);
+        CartManager::addItem('product', (string)$data['item_id'], (int)$data['quantity'], [], null, $sessionCode);
 
         return response()->json(
             $this->cartResponse($sessionCode, returnWord('Successfully added to cart.', WORDS_PROJECT))
@@ -28,7 +28,7 @@ class CartController extends Controller
 
         $sessionCode = $this->resolveSessionCode($request);
 
-        CartManager::setItemQuantity('product', (string) $data['item_id'], (int) $data['quantity'], [], null, $sessionCode);
+        CartManager::setItemQuantity('product', (string)$data['item_id'], (int)$data['quantity'], [], null, $sessionCode);
 
         return response()->json(
             $this->cartResponse($sessionCode, returnWord('Successfully set.', WORDS_PROJECT))
@@ -43,7 +43,7 @@ class CartController extends Controller
 
         $sessionCode = $this->resolveSessionCode($request);
 
-        CartManager::removeItem((int) $validated['id'], null, $sessionCode);
+        CartManager::removeItem((int)$validated['id'], null, $sessionCode);
 
         $items = CartManager::getItems(null, $sessionCode);
         $response = $this->cartResponse($sessionCode, returnWord('Successfully removed.', WORDS_PROJECT));
@@ -83,15 +83,13 @@ class CartController extends Controller
 
     protected function resolveSessionCode(Request $request): string
     {
-        $headerCode = (string) $request->header('X-Session-Code', '');
+        $headerCode = (string)$request->header('X-Session-Code', '');
 
         if ($headerCode !== '') {
             session(['session_code' => $headerCode]);
-            $_SESSION['session_code'] = $headerCode;
-
             return $headerCode;
         }
 
-        return (string) (session('session_code') ?? '');
+        return (string)(session('session_code') ?? '');
     }
 }

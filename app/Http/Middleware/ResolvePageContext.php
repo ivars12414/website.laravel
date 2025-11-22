@@ -16,8 +16,6 @@ class ResolvePageContext
 {
     public function handle(Request $request, Closure $next)
     {
-        Auth::shouldUse('client');
-
         /** @var PageContext $context */
         $context = app(PageContext::class);
 

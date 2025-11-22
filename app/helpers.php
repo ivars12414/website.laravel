@@ -332,5 +332,45 @@ function getEnglishMonthAndDayNames(): array
     ];
 }
 
+if (!function_exists('generateNumberString')) {
+    function generateNumberString(int $length): string
+    {
+        if ($length < 1) {
+            return '';
+        }
+
+        // random_int — криптографически безопасный
+        $min = 10 ** ($length - 1);
+        $max = (10 ** $length) - 1;
+
+        return (string)random_int($min, $max);
+    }
+}
+
+function getDomainWithPrefix()
+{
+    // Получение текущего хоста
+    $host = $_SERVER['HTTP_HOST'];
+
+    // Проверка наличия протокола HTTPS
+    $https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+
+    // Проверка наличия префикса "www"
+    $www = (strpos($host, 'www.') !== 0);
+
+    // Добавление протокола HTTPS и префикса "www" при необходимости
+    if ($https) {
+        $protocol = 'https://';
+    } else {
+        $protocol = 'http://';
+    }
+
+    if ($www) {
+        $host = 'www.' . $host;
+    }
+
+    return $protocol . $host;
+}
+
 include_once __DIR__ . '/catalog_helpers.php';
 include_once __DIR__ . '/orders.php';

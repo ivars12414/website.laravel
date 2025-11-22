@@ -41,10 +41,7 @@ class LoginController extends Controller
             ]);
         }
 
-        Auth::shouldUse('client');
-        Auth::guard('client')->login($client);
-        session(['login_id' => $client->id]);
-        $_SESSION['login_id'] = $client->id;
+        Auth::login($client);
 
         $redirectHref = $request->input('success_href') ?: sectionHref('settings');
 

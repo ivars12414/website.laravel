@@ -10,7 +10,8 @@
         "dompdf/dompdf": "*",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
-        "phpmailer/phpmailer": "*"
+        "phpmailer/phpmailer": "*",
+        "spatie/laravel-stripe-webhooks": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
