@@ -8,7 +8,7 @@
             <div class="product__text">{!! $item->description !!}</div>
         </div>
 
-        <form class="product__item-footer" action="/api/cart/add-product" method="post" data-add-to-cart>
+        <form class="product__item-footer" action="/cart/add-product" method="post" data-add-to-cart>
             <input type="hidden" name="item_id" value="{{ $item->id }}">
             <input type="hidden" name="quantity" value="1">
 

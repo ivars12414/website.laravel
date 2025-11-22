@@ -8,8 +8,7 @@
 
 
 <style>
-    @include("font.css.php")
-    ;
+    {!! include resource_path('views/pdf/font.css.php') !!}
 
     body {
         padding: 100px 0;

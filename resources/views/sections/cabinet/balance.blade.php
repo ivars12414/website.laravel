@@ -84,7 +84,7 @@
 
             new FormSubmit({
                 formSelector: 'form[data-form=top_up]',
-                ajaxUrl: '/api/top_up',
+                ajaxUrl: '/credits/top_up',
                 successCallback: (r) => {
                     if (r.href) location.href = r.href;
                 },

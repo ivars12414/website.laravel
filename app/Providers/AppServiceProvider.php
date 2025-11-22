@@ -6,11 +6,10 @@ use App\Catalog\Contracts\CatalogCategoryServiceInterface;
 use App\Catalog\Contracts\CatalogItemServiceInterface;
 use App\Catalog\Services\CatalogCategoryService;
 use App\Catalog\Services\CatalogItemService;
-use App\Catalog\CatalogRouteResolver;
 use App\Seo\CatalogSeoResolver;
-use App\Seo\DefaultSectionSeoResolver;
 use App\Seo\SeoUrlManager;
 use App\Support\PageContext;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -41,6 +40,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Schema::defaultStringLength(191);
         require_once base_path('bootstrap/tables_configs.php');
     }
 }

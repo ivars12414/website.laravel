@@ -1,5 +1,4 @@
-<?php $host = getDomainWithPrefix(); ?>
-<?php $fontFolder = "$host/modules/pdf_html/dm_sans"; ?>
+<?php $fontFolder = resource_path('dm_sans'); ?>
 
 /* latin-ext */
 @font-face {

@@ -28,7 +28,7 @@
 
         new FormSubmit({
             formSelector: '[data-add-to-cart]',
-            ajaxUrl: '/api/cart/add-product',
+            ajaxUrl: '/cart/add-product',
             createDefaultAlerts: false,
             successCallback: (r, {$form, $submit}) => {
                 $('[data-cart-items-qty]').html(r.summary.qty);
@@ -60,7 +60,7 @@
 
                     // $('[data-go-to-cart-btn]').hide();
 
-                    fetch('/api/cart/set-product-qty', {
+                    fetch('/cart/set-product-qty', {
                         method: 'POST',
                         body: new URLSearchParams(new FormData(itemForm)),
                         headers: {
@@ -91,7 +91,7 @@
 
                 let $this = $(this);
 
-                fetch('/api/cart/remove-item', {
+                fetch('/cart/remove-item', {
                     method: 'POST',
                     body: new URLSearchParams({id: $this.data('remove-cart-item')}),
                     headers: {
