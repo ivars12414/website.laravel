@@ -52,7 +52,7 @@ class TextSectionController extends Controller
                 ['title' => $title, 'url' => url()->current()],
             ]);
 
-            return view('sections.text.index', ['page' => $context, 'ctx' => $route]);
+            return view('sections.text.show', ['page' => $context, 'article' => $route->item]);
         }
 
         $context->breadcrumbs([
@@ -60,6 +60,6 @@ class TextSectionController extends Controller
             ['title' => $section?->name, 'url' => url()->current()],
         ]);
 
-        return view('sections.text.index', ['page' => $context, 'ctx' => $route]);
+        return view('sections.text.index', ['page' => $context, 'articles' => $route->items]);
     }
 }
