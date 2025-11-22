@@ -121,6 +121,27 @@ class PaymentService
         return ['error' => false, 'msg' => 'Payment status changed'];
     }
 
+    public function updatePaymentStatusByGatewayPaymentId(string $gatewayPaymentId, string $statusLabel, string $category, array $add_data = []): array
+    {
+        $payment = Payment::where('gateway_payment_id', $gatewayPaymentId)->first();
+
+        if (!$payment) {
+            return ['error' => true, 'msg' => 'Payment not found'];
+        }
+
+        $status = Status::findByLabel($statusLabel, $category);
+
+        if (!$status) {
+            return ['error' => true, 'msg' => 'Status not found'];
+        }
+
+        if ((int) $payment->status_id === (int) $status->id) {
+            return ['error' => false, 'msg' => 'Payment status unchanged'];
+        }
+
+        return $this->updatePaymentStatus($payment, $status, $add_data);
+    }
+
     /**
      *
      * @param string $order_type key from Payment::ORDER_TYPES
