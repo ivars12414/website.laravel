@@ -4,10 +4,14 @@ namespace App\Seo;
 
 use App\Models\Language;
 use App\Support\PageContext;
+use App\Text\TextRouteContext;
+use App\Text\TextRouteResolver;
 use Illuminate\Http\Request;
 
 class DefaultSectionSeoResolver implements SectionSeoResolverInterface
 {
+    protected TextRouteResolver $routeResolver;
+
     public function supports($section): bool
     {
         return true;
@@ -16,19 +20,41 @@ class DefaultSectionSeoResolver implements SectionSeoResolverInterface
     public function resolve(Request $request, PageContext $context): void
     {
         $section = $context->section();
-        $lang    = $context->language();
-        if (!$section || !$lang) return;
+        $language = $context->language();
+        if (!$section || !$language) return;
 
-        $segments = $request->segments();
 
-        if (isset($segments[0]) && $segments[0] === $lang->code) array_shift($segments);
-        if (isset($segments[0]) && $segments[0] === $section->code) array_shift($segments);
-        $tail = implode('/', $segments);
+        $ctx = $context->getSectionContext('text');
+        if (!$ctx instanceof TextRouteContext) {
+            $ctx = $this->routeResolver->resolve($request, $language, $section);
+            $context->setSectionContext('catalog', $ctx);
+        }
 
-        foreach (Language::all() as $l) {
-            $url = url('/' . $l->code . '/' . $section->code . ($tail ? '/' . $tail : ''));
-            $context->setAlternate($l->code, $url);
-            if ($l->id === $lang->id) $context->setCanonical($url);
+        $currentPath = $this->buildPathForLanguage($ctx, $language->code);
+        if (!$currentPath) return;
+
+        $context->setCanonical(url($currentPath));
+
+        foreach (Language::all() as $lang) {
+            $alt = $this->buildPathForLanguage($ctx, $lang->code);
+            if ($alt) $context->setAlternate($lang->code, url($alt));
         }
     }
+
+    protected function buildPathForLanguage(TextRouteContext $ctx, string $langCode): ?string
+    {
+        switch ($ctx->type) {
+            case TextRouteContext::TYPE_ITEM:
+                $slug = $ctx->item->slug;
+                if (!$slug) return null;
+                return sectionHrefByHash($ctx->section->getHash(), Language::where('code', $langCode)->id) . '/' . $slug;
+
+            case TextRouteContext::TYPE_LIST:
+                return sectionHrefByHash($ctx->section->getHash(), Language::where('code', $langCode)->id);
+
+            default:
+                return null;
+        }
+    }
+
 }
