@@ -29,10 +29,10 @@ Route::prefix('/cart')->name('cart.')->group(function () {
 
 Route::post('/credits/top_up', [\App\Http\Controllers\Api\CreditsController::class, 'topUp'])->name('credits.top-up');//
 
-Route::get('/run-migrate', function () {
-    Artisan::call('migrate', ['--force' => true]);
-    return 'done';
-});
+//Route::get('/run-migrate', function () {
+//    Artisan::call('migrate', ['--force' => true]);
+//    return 'done';
+//});
 
 Route::any('{any}', [PageController::class, 'handle'])->where('any', '.*');
 
