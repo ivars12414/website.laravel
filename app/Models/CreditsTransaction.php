@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Dompdf\Dompdf;
+use Illuminate\Support\Facades\Storage;
 
 class CreditsTransaction extends BaseModel
 {
@@ -85,7 +86,7 @@ class CreditsTransaction extends BaseModel
 
     public function generateInvoice(): static
     {
-        $folder = "/pdf/credits";
+        $folder = 'pdf/credits';
 
         $transaction = $this;
 
@@ -94,7 +95,8 @@ class CreditsTransaction extends BaseModel
         $contacts = Contacts::where('lang_id', $transaction->lang_id)->first();
 
         if (!empty($transaction->pdf)) {
-            @unlink(base_path($transaction->pdf));
+            $storedPdf = ltrim(str_replace('/storage/', '', $transaction->pdf), '/');
+            Storage::disk('public')->delete($storedPdf);
         }
 
         // рендерим Blade-шаблон в HTML
@@ -123,16 +125,13 @@ class CreditsTransaction extends BaseModel
         $dompdf->render();
         $output = $dompdf->output();
 
-        $fname = 'invoice-' . $transaction->nr . ".pdf";
+        $fileName = 'invoice-' . $transaction->nr . '.pdf';
+        $addFolder = date('Y/m/');
+        $storagePath = $folder . '/' . $addFolder . $fileName;
 
-        $addFolder = date("/Y/m/");
-        if (!is_dir(base_path($folder . $addFolder))) {
-            mkdir(base_path($folder . $addFolder), 0775, true);
-        }
-        $fname = $folder . $addFolder . $fname;
-        file_put_contents(base_path($fname), $output);
+        Storage::disk('public')->put($storagePath, $output);
 
-        $transaction->update(['pdf' => $fname]);
+        $transaction->update(['pdf' => '/storage/' . $storagePath]);
 
         return $this;
     }
