@@ -74,11 +74,14 @@ if (!function_exists('sectionHrefByHash')) {
         }
 
         $sectData = getSectionDataByHash($hash, $lang_id);
+
+        if (!$sectData) return '';
+
         if (($sectData['main'] ?? false) && $lang_id === getMainLang()) {
             return '/';
         }
 
-        return SectionsCache::getHrefByHash($hash, (int)$lang_id);
+        return $sectData['section_link'];
     }
 }
 

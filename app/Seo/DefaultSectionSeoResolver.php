@@ -23,34 +23,40 @@ class DefaultSectionSeoResolver implements SectionSeoResolverInterface
         $language = $context->language();
         if (!$section || !$language) return;
 
+        $this->routeResolver = app(TextRouteResolver::class);
 
         $ctx = $context->getSectionContext('text');
         if (!$ctx instanceof TextRouteContext) {
             $ctx = $this->routeResolver->resolve($request, $language, $section);
-            $context->setSectionContext('catalog', $ctx);
+            $context->setSectionContext('text', $ctx);
         }
 
-        $currentPath = $this->buildPathForLanguage($ctx, $language->code);
+        $currentPath = $this->buildPathForLanguage($ctx, $language);
         if (!$currentPath) return;
 
         $context->setCanonical(url($currentPath));
 
         foreach (Language::all() as $lang) {
-            $alt = $this->buildPathForLanguage($ctx, $lang->code);
-            if ($alt) $context->setAlternate($lang->code, url($alt));
+            $alt = $this->buildPathForLanguage($ctx, $lang, true);
+            if ($alt) $context->setAlternate($lang->id, url($alt));
         }
     }
 
-    protected function buildPathForLanguage(TextRouteContext $ctx, string $langCode): ?string
+    protected function buildPathForLanguage(TextRouteContext $ctx, Language $lang, bool $dump = false): ?string
     {
+
+        $sectionHref = sectionHrefByHash($ctx->section->getHash(), $lang->id);
+        if (!$sectionHref) return null;
+
         switch ($ctx->type) {
             case TextRouteContext::TYPE_ITEM:
+                // здесь нужно запрашивать ссылку на язык
                 $slug = $ctx->item->slug;
                 if (!$slug) return null;
-                return sectionHrefByHash($ctx->section->getHash(), Language::where('code', $langCode)->id) . '/' . $slug;
+                return $sectionHref . '/' . $slug;
 
             case TextRouteContext::TYPE_LIST:
-                return sectionHrefByHash($ctx->section->getHash(), Language::where('code', $langCode)->id);
+                return $sectionHref;
 
             default:
                 return null;
