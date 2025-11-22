@@ -85,7 +85,7 @@ class CreditsTransaction extends BaseModel
 
     public function generateInvoice(): static
     {
-        $folder = "/userfiles/credits_credits/pdf";
+        $folder = "/pdf/credits";
 
         $transaction = $this;
 
@@ -123,7 +123,7 @@ class CreditsTransaction extends BaseModel
         $dompdf->render();
         $output = $dompdf->output();
 
-        $fname = $transaction->nr . ".pdf";
+        $fname = 'invoice-' . $transaction->nr . ".pdf";
 
         $addFolder = date("/Y/m/");
         if (!is_dir(base_path($folder . $addFolder))) {
