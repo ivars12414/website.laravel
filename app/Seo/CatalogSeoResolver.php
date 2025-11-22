@@ -29,7 +29,12 @@ class CatalogSeoResolver implements SectionSeoResolverInterface
         $language = $context->language();
         if (!$section || !$language) return;
 
-        $ctx = $this->routeResolver->resolve($request, $language);
+        /** @var CatalogRouteContext|null $ctx */
+        $ctx = $context->getSectionContext('catalog');
+        if (!$ctx instanceof CatalogRouteContext) {
+            $ctx = $this->routeResolver->resolve($request, $language);
+            $context->setSectionContext('catalog', $ctx);
+        }
 
         $currentPath = $this->buildPathForLanguage($ctx, $language->code);
         if (!$currentPath) return;

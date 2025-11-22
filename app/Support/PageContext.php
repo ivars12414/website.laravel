@@ -25,6 +25,7 @@ class PageContext
     protected string $bodyClass = '';
     protected string $sessionCode = '';
     protected ?Currency $currency = null;
+    protected array $sectionContexts = [];
 
     public function setLanguage(Language $language): void
     {
@@ -133,5 +134,15 @@ class PageContext
     public function currency(): ?Currency
     {
         return $this->currency;
+    }
+
+    public function setSectionContext(string $key, $value): void
+    {
+        $this->sectionContexts[$key] = $value;
+    }
+
+    public function getSectionContext(string $key, $default = null)
+    {
+        return $this->sectionContexts[$key] ?? $default;
     }
 }
