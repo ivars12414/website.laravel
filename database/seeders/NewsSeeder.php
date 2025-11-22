@@ -23,12 +23,9 @@ class NewsSeeder extends Seeder
                 [
                     'code' => Str::slug($language->code === 'lv' ? 'Ziņas' : 'News'),
                     'name' => $language->code === 'lv' ? 'Ziņas' : 'News',
-                    'default_controller' => '',
-                    'requires_auth' => false,
-                    'default_title' => $language->code === 'lv' ? 'Jaunākās ziņas' : 'Latest news',
-                    'default_h1' => $language->code === 'lv' ? 'Jaunākās ziņas' : 'Latest news',
                     'position' => Section::POSITION_HEADER,
                     'status' => 1,
+                    'hash' => '152867334b8ebf8955309b8fc1516f08',
                 ]
             );
 
@@ -52,7 +49,7 @@ class NewsSeeder extends Seeder
                         'img' => 'https://picsum.photos/seed/' . $slug . '/600/400',
                         'tm_unix' => $publishedAt->timestamp,
                         'show_dt' => 1,
-                        'link' => null,
+                        'link' => '',
                     ]
                 );
             }

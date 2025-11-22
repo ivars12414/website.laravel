@@ -47,8 +47,8 @@ class TextSectionController extends Controller
             $context->meta('h1', $title);
 
             $context->breadcrumbs([
-//            ['title' => 'Home', 'url' => route('home', absolute: false) ?? '/'],
-                ['title' => $section?->name, 'url' => sectionHref($section?->code, $language?->id)],
+                ['title' => 'Home', 'url' => sectionHref() ?? '/'],
+                ['title' => $section?->name, 'url' => sectionHrefByHash($section->hash, $section->lang_id)],
                 ['title' => $title, 'url' => url()->current()],
             ]);
 
@@ -56,7 +56,7 @@ class TextSectionController extends Controller
         }
 
         $context->breadcrumbs([
-//            ['title' => 'Home', 'url' => route('home', absolute: false) ?? '/'],
+            ['title' => 'Home', 'url' => sectionHref() ?? '/'],
             ['title' => $section?->name, 'url' => url()->current()],
         ]);
 

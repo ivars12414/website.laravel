@@ -34,6 +34,15 @@ Route::post('/credits/top_up', [\App\Http\Controllers\Api\CreditsController::cla
 //    return 'done';
 //});
 
+//Route::get('/run-seed/news', function () {
+//    Artisan::call('db:seed', [
+//        '--class' => 'NewsSeeder',
+//        '--force' => true
+//    ]);
+//    return 'done';
+//});
+
+
 Route::any('{any}', [PageController::class, 'handle'])->where('any', '.*');
 
 
