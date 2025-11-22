@@ -12,7 +12,7 @@ use App\Payment\Registry\PaymentHandlerRegistry;
 
 class PaymentService
 {
-    public function createPayment(string $type, int $orderId, string $paymentMethodHash, float $sum, string $currencyCode, array $urls): array
+    public function createPayment(string $type, int $orderId, string $paymentMethodHash, float $sum, string $currencyCode, array $urls, int $source = 0): array
     {
         if ($sum <= 0) {
             return ['error' => true, 'msg' => 'The amount must be greater than 0'];
@@ -56,7 +56,9 @@ class PaymentService
         $this->updatePaymentStatus(
             payment: $payment,
             status: Status::findByLabel('awaiting', 'payments'),
-            add_data: []
+            add_data: [
+                'source' => $source,
+            ]
         );
 
         try {
@@ -108,7 +110,7 @@ class PaymentService
             $payment->id,
             $status,
             0,
-            SOURCE_SITE,
+            (int)$add_data['source'] ?? 0,
             $add_data['reason_hash'] ?? ''
         );
 
@@ -135,7 +137,7 @@ class PaymentService
             return ['error' => true, 'msg' => 'Status not found'];
         }
 
-        if ((int) $payment->status_id === (int) $status->id) {
+        if ((int)$payment->status_id === (int)$status->id) {
             return ['error' => false, 'msg' => 'Payment status unchanged'];
         }
 

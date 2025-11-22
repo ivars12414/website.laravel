@@ -7,5 +7,5 @@ use App\Models\Status;
 
 interface PaymentEntityHandlerInterface
 {
-  public function handleStatusChange(Payment $payment, Status $status): void;
+    public function handleStatusChange(Payment $payment, Status $status, int $source = 0): void;
 }
