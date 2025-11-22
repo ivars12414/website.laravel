@@ -5,9 +5,11 @@ namespace App\Http\Middleware;
 use App\Models\Language;
 use App\Models\Section;
 use App\Support\PageContext;
+use App\Http\Controllers\TextSectionController;
 use App\Services\Currency\CurrencySelector;
 use App\Services\SessionCodeResolver;
 use App\Seo\SeoUrlManager;
+use App\Text\TextRouteResolver;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -73,6 +75,8 @@ class ResolvePageContext
 
         if ($section) $context->setSection($section);
 
+        $this->resolveTextSectionContext($request, $context);
+
         // Auth для разделов с requires_auth или это раздел кабинета
         if ($section && ((int)$section->auth_required || (int)$section->position === Section::POSITION_CABINET) && !auth()->check()) {
             return redirect()->to(sectionHref('', $language?->id ?? 0));
@@ -110,6 +114,20 @@ class ResolvePageContext
         view()->share('page', $context);
 
         return $next($request);
+    }
+
+    private function resolveTextSectionContext(Request $request, PageContext $context): void
+    {
+        $section = $context->section();
+        $language = $context->language();
+
+        if (!$section || !$language) return;
+
+        $controller = $section->controller ?? TextSectionController::class;
+        if ($controller !== TextSectionController::class) return;
+
+        $routeResolver = app(TextRouteResolver::class);
+        $context->setSectionContext('text', $routeResolver->resolve($request, $language, $section));
     }
 
     private function setSectionBodyClass(PageContext $context): void
