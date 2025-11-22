@@ -19,7 +19,12 @@ class CatalogController extends Controller
     public function handle(Request $request, PageContext $context)
     {
         $lang = $context->language();
-        $route = $this->resolver->resolve($request, $lang);
+        /** @var \App\Catalog\CatalogRouteContext|null $route */
+        $route = $context->getSectionContext('catalog');
+        if (!$route) {
+            $route = $this->resolver->resolve($request, $lang);
+            $context->setSectionContext('catalog', $route);
+        }
 
         if ($route->items instanceof Builder) {
             $route->items = $route->items
