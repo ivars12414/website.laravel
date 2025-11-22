@@ -19,12 +19,11 @@ class NewsSeeder extends Seeder
 
         foreach ($languages as $language) {
             $section = Section::firstOrCreate(
-                ['hash' => $language->code . '-news'],
+                ['label' => 'news', 'lang_id' => $language->id],
                 [
-                    'lang_id' => $language->id,
-                    'code' => 'news',
+                    'code' => Str::slug($language->code === 'lv' ? 'Ziņas' : 'News'),
                     'name' => $language->code === 'lv' ? 'Ziņas' : 'News',
-                    'default_controller' => TextSectionController::class,
+                    'default_controller' => '',
                     'requires_auth' => false,
                     'default_title' => $language->code === 'lv' ? 'Jaunākās ziņas' : 'Latest news',
                     'default_h1' => $language->code === 'lv' ? 'Jaunākās ziņas' : 'Latest news',
@@ -39,7 +38,7 @@ class NewsSeeder extends Seeder
                 $title = $faker->sentence(6);
                 $slug = Str::slug($title) ?: 'news-' . $i;
 
-                $hash = $language->code . '-news-' . $i;
+                $hash = md5('news-' . $i);
                 $publishedAt = Carbon::now()->subDays($i);
 
                 Content::updateOrCreate(
@@ -50,7 +49,7 @@ class NewsSeeder extends Seeder
                         'title' => $title,
                         'header' => $faker->sentence(12),
                         'content' => $this->buildContent($faker),
-                        'img' => 'https://picsum.photos/seed/' . $hash . '/600/400',
+                        'img' => 'https://picsum.photos/seed/' . $slug . '/600/400',
                         'tm_unix' => $publishedAt->timestamp,
                         'show_dt' => 1,
                         'link' => null,
@@ -65,7 +64,7 @@ class NewsSeeder extends Seeder
         $paragraphs = $faker->paragraphs(4);
 
         return collect($paragraphs)
-            ->map(fn ($text) => '<p>' . $text . '</p>')
+            ->map(fn($text) => '<p>' . $text . '</p>')
             ->implode("\n\n");
     }
 }
