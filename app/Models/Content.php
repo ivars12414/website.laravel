@@ -35,4 +35,11 @@ class Content extends BaseModel implements \App\Contracts\HasLanguageLinks
   {
     return $this->getUrl($langId);
   }
+
+  public function getLanguageSlug(int $langId): ?string
+  {
+    return self::where('hash', $this->hash)
+      ->where('lang_id', $langId)
+      ->value('slug');
+  }
 }

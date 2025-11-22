@@ -50,8 +50,7 @@ class DefaultSectionSeoResolver implements SectionSeoResolverInterface
 
         switch ($ctx->type) {
             case TextRouteContext::TYPE_ITEM:
-                // здесь нужно запрашивать ссылку на язык
-                $slug = $ctx->item->slug;
+                $slug = $ctx->item->getLanguageSlug($lang->id);
                 if (!$slug) return null;
                 return $sectionHref . '/' . $slug;
 
