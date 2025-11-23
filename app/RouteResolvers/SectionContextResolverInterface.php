@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Seo;
+namespace App\RouteResolvers;
 
 use App\Models\Section;
 use App\Support\PageContext;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Text;
+namespace App\RouteResolvers\Default;
 
 use App\Models\Content;
 use App\Models\Language;

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Seo\CatalogRouteResolver;
+use App\RouteResolvers\Catalog\CatalogRouteResolver;
 use App\Support\PageContext;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -19,7 +19,7 @@ class CatalogController extends Controller
     public function handle(Request $request, PageContext $context)
     {
         $lang = $context->language();
-        /** @var \App\Catalog\CatalogRouteContext|null $route */
+        /** @var \App\RouteResolvers\Catalog\CatalogRouteContext|null $route */
         $route = $context->getSectionContext('catalog');
         if (!$route) {
             $route = $this->resolver->resolveCatalog($request, $lang, $context->section());
@@ -49,7 +49,7 @@ class CatalogController extends Controller
 
         $context->meta('title', 'Catalog');
         $context->breadcrumbs([
-//            ['title' => 'Home', 'url' => route('home', absolute: false) ?? '/'],
+            ['title' => 'Home', 'url' => sectionHref()],
             ['title' => 'Catalog', 'url' => url()->current()],
         ]);
 
@@ -59,7 +59,7 @@ class CatalogController extends Controller
     protected function itemBreadcrumbs($ctx, string $lang): array
     {
         $bc = [
-//            ['title' => 'Home', 'url' => route('home', absolute: false) ?? '/'],
+            ['title' => 'Home', 'url' => sectionHref()],
             ['title' => 'Catalog', 'url' => sectionHref('catalog', $ctx->language->id)],
         ];
         if ($ctx->category) {
@@ -74,7 +74,7 @@ class CatalogController extends Controller
     protected function categoryBreadcrumbs($ctx, string $lang): array
     {
         $bc = [
-//            ['title' => 'Home', 'url' => route('home', absolute: false) ?? '/'],
+            ['title' => 'Home', 'url' => sectionHref()],
             ['title' => 'Catalog', 'url' => sectionHref('catalog', $ctx->language->id)],
         ];
         foreach ($ctx->category->getParentsChain($lang) as $cat) {

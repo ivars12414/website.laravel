@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection as SupportCollection;
 
-class Category extends BaseModel implements HasLanguageLinks
+class Category extends BaseModel
 {
     protected $table = 'categories';
 

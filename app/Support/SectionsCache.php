@@ -28,7 +28,7 @@ class SectionsCache
 
     private static function buildHref(array $data): string
     {
-        $languageCode = Language::byIdCached($data['lang_id'])?->code;
+        $languageCode = Language::byIdCached((int)$data['lang_id'])?->code;
 
         if (!empty($data['scroll_href'])) {
             $uri = request()?->getRequestUri() ?? ($_SERVER['REQUEST_URI'] ?? '');
@@ -39,11 +39,11 @@ class SectionsCache
                 return $data['scroll_href'];
             }
 
-            if ($data['main']) {
-                return $data['lang_id'] === getMainLang() ? '/' : '/' . $languageCode;
+            if ($data['main'] === '1') {
+                return (int)$data['lang_id'] === getMainLang() ? '/' : '/' . $languageCode;
             }
 
-            $prefix = $data['lang_id'] === getMainLang() ? '/' : '/' . $languageCode;
+            $prefix = (int)$data['lang_id'] === getMainLang() ? '/' : '/' . $languageCode;
             return $prefix . $data['scroll_href'];
         }
 
@@ -51,8 +51,8 @@ class SectionsCache
             return $data['ex_link'];
         }
 
-        if ($data['main']) {
-            return $data['lang_id'] === getMainLang() ? '/' : '/' . $languageCode;
+        if ($data['main'] === '1') {
+            return (int)$data['lang_id'] === getMainLang() ? '/' : '/' . $languageCode;
         }
 
         return '/' . $languageCode . '/' . $data['code'];

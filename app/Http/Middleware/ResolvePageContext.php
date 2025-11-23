@@ -7,7 +7,7 @@ use App\Models\Section;
 use App\Support\PageContext;
 use App\Services\Currency\CurrencySelector;
 use App\Services\SessionCodeResolver;
-use App\Seo\SectionContextResolver;
+use App\RouteResolvers\SectionContextResolver;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -101,10 +101,10 @@ class ResolvePageContext
                 ->get(),
         ]);
 
-        $this->setSectionBodyClass($context);
-
-        // SEO
+        // Разбираемся с контекстом раздела
         app(SectionContextResolver::class)->resolve($request);
+
+        $this->setSectionBodyClass($context);
 
         view()->share('page', $context);
 

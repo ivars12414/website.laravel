@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Seo;
+namespace App\RouteResolvers\Catalog;
 
-use App\Catalog\CatalogRouteContext;
 use App\Catalog\Contracts\CatalogCategoryServiceInterface;
 use App\Catalog\Contracts\CatalogItemServiceInterface;
 use App\Models\Category;
 use App\Models\Language;
 use App\Models\Section;
+use App\RouteResolvers\SectionContextResolverInterface;
 use App\Support\PageContext;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -44,21 +44,22 @@ class CatalogRouteResolver implements SectionContextResolverInterface
             $context->setSectionContext('catalog', $ctx);
         }
 
-        $currentPath = $this->buildPathForLanguage($ctx, $language);
+        $currentPath = $this->buildPathForLanguage($ctx, $language, true);
         if (!$currentPath) return;
 
         $context->setCanonical(url($currentPath));
 
         foreach (Language::all() as $lang) {
-            $alt = $this->buildPathForLanguage($ctx, $lang);
+            $alt = $this->buildPathForLanguage($ctx, $lang, $lang->id === 10);
             if ($alt) $context->setAlternate($lang->code, url($alt));
         }
     }
 
-    protected function buildPathForLanguage(CatalogRouteContext $ctx, Language $lang): ?string
+    protected function buildPathForLanguage(CatalogRouteContext $ctx, Language $lang, bool $dump = false): ?string
     {
 
         $sectionHref = sectionHrefByHash($ctx->section->getHash(), $lang->id);
+
         if (!$sectionHref) return null;
 
         switch ($ctx->type) {
@@ -69,7 +70,8 @@ class CatalogRouteResolver implements SectionContextResolverInterface
                 return $sectionHref . ($catPath ? '/' . $catPath : '') . '/' . $slug;
 
             case CatalogRouteContext::TYPE_CATEGORY:
-                $catPath = trim($ctx->category->getPath($lang->code), '/');
+                $catPath = trim($ctx->category->link, '/');
+//                if ($dump) dd($ctx->category);
                 if (!$catPath) return null;
                 return $sectionHref . $catPath;
 

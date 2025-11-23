@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Catalog;
+namespace App\RouteResolvers\Catalog;
 
 use App\Models\Language;
 use App\Models\Section;
