@@ -6,9 +6,9 @@ use App\Catalog\Contracts\CatalogCategoryServiceInterface;
 use App\Catalog\Contracts\CatalogItemServiceInterface;
 use App\Catalog\Services\CatalogCategoryService;
 use App\Catalog\Services\CatalogItemService;
-use App\Seo\CatalogSeoResolver;
+use App\Seo\CatalogRouteResolver;
 use App\Seo\DefaultSectionSeoResolver;
-use App\Seo\SeoUrlManager;
+use App\Seo\SectionContextResolver;
 use App\Support\PageContext;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -25,11 +25,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(CatalogCategoryServiceInterface::class, CatalogCategoryService::class);
         $this->app->bind(CatalogItemServiceInterface::class, CatalogItemService::class);
 
-        $this->app->singleton(SeoUrlManager::class, function ($app) {
-            return new SeoUrlManager(
+        $this->app->singleton(SectionContextResolver::class, function ($app) {
+            return new SectionContextResolver(
                 $app->make(PageContext::class),
                 [
-                    $app->make(CatalogSeoResolver::class),
+                    $app->make(CatalogRouteResolver::class),
                     $app->make(DefaultSectionSeoResolver::class),
                     // другие резолверы разделов добавишь здесь
                 ]

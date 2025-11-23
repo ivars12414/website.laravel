@@ -7,7 +7,7 @@ use App\Models\Section;
 use App\Support\PageContext;
 use App\Services\Currency\CurrencySelector;
 use App\Services\SessionCodeResolver;
-use App\Seo\SeoUrlManager;
+use App\Seo\SectionContextResolver;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -104,7 +104,7 @@ class ResolvePageContext
         $this->setSectionBodyClass($context);
 
         // SEO
-        app(SeoUrlManager::class)->resolve($request);
+        app(SectionContextResolver::class)->resolve($request);
 
         view()->share('page', $context);
 

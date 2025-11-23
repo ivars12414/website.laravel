@@ -2,11 +2,11 @@
 
 namespace App\Seo;
 
-use App\Support\PageContext;
 use App\Models\Section;
+use App\Support\PageContext;
 use Illuminate\Http\Request;
 
-class SeoUrlManager
+class SectionContextResolver
 {
     protected array $resolvers;
     protected SectionSeoResolverInterface $defaultResolver;
