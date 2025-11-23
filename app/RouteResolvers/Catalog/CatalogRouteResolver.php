@@ -88,11 +88,15 @@ class CatalogRouteResolver implements SectionContextResolverInterface
         $segments = $request->segments();
         $langCode = $language->code;
 
+        $hasCatalogSegments = false;
+
         $showSubcategoryItems = isConfig('show_subcat_items');
         $showCategories = isConfig('show_categories');
 
         if (isset($segments[0]) && $segments[0] === $langCode) array_shift($segments);
         if (isset($segments[0]) && $segments[0] === section()->code) array_shift($segments);
+
+        $hasCatalogSegments = !empty($segments);
 
         $filters = $request->query();
         $page = max((int)$request->query('page', 1), 1);
@@ -119,6 +123,9 @@ class CatalogRouteResolver implements SectionContextResolverInterface
             $ctx->item = $item;
             array_pop($segments);
             if (!empty($segments)) $ctx->category = $this->categoryService->findByPathAndLanguage($segments, $language);
+            if (!empty($segments) && !$ctx->category) {
+                return $this->makeNotFoundContext($language, $section);
+            }
             $ctx->filters = $filters;
             $ctx->page = $page;
             $ctx->sort = $sort;
@@ -145,6 +152,10 @@ class CatalogRouteResolver implements SectionContextResolverInterface
             return $ctx;
         }
 
+        if ($hasCatalogSegments) {
+            return $this->makeNotFoundContext($language, $section);
+        }
+
         $ctx = new CatalogRouteContext(CatalogRouteContext::TYPE_LIST);
         $ctx->filters = $filters;
         $ctx->page = $page;
@@ -155,6 +166,15 @@ class CatalogRouteResolver implements SectionContextResolverInterface
         $ctx->categories = $showCategories ? $this->categoryService->getVisibleChildren(null, $filters) : null;
         $ctx->language = $language;
         $ctx->section = $section;
+        return $ctx;
+    }
+
+    protected function makeNotFoundContext(Language $language, Section $section): CatalogRouteContext
+    {
+        $ctx = new CatalogRouteContext(CatalogRouteContext::TYPE_404);
+        $ctx->language = $language;
+        $ctx->section = $section;
+
         return $ctx;
     }
 

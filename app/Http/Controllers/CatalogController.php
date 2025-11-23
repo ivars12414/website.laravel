@@ -32,6 +32,7 @@ class CatalogController extends Controller
                 ->withQueryString();
         }
 
+        if ($route->is404()) abort(404);
         if ($route->isItem() && !$route->item) abort(404);
         if ($route->isCategory() && !$route->category) abort(404);
 
