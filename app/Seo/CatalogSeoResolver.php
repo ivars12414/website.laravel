@@ -20,7 +20,7 @@ class CatalogSeoResolver implements SectionSeoResolverInterface
 
     public function supports(Section $section): bool
     {
-        return $section->code === 'catalog';
+        return $section->label === 'catalog';
     }
 
     public function resolve(Request $request, PageContext $context): void
@@ -32,37 +32,41 @@ class CatalogSeoResolver implements SectionSeoResolverInterface
         /** @var CatalogRouteContext|null $ctx */
         $ctx = $context->getSectionContext('catalog');
         if (!$ctx instanceof CatalogRouteContext) {
-            $ctx = $this->routeResolver->resolve($request, $language);
+            $ctx = $this->routeResolver->resolve($request, $language, $section);
             $context->setSectionContext('catalog', $ctx);
         }
 
-        $currentPath = $this->buildPathForLanguage($ctx, $language->code);
+        $currentPath = $this->buildPathForLanguage($ctx, $language);
         if (!$currentPath) return;
 
         $context->setCanonical(url($currentPath));
 
         foreach (Language::all() as $lang) {
-            $alt = $this->buildPathForLanguage($ctx, $lang->code);
+            $alt = $this->buildPathForLanguage($ctx, $lang);
             if ($alt) $context->setAlternate($lang->code, url($alt));
         }
     }
 
-    protected function buildPathForLanguage(CatalogRouteContext $ctx, string $langCode): ?string
+    protected function buildPathForLanguage(CatalogRouteContext $ctx, Language $lang): ?string
     {
+
+        $sectionHref = sectionHrefByHash($ctx->section->getHash(), $lang->id);
+        if (!$sectionHref) return null;
+
         switch ($ctx->type) {
             case CatalogRouteContext::TYPE_ITEM:
-                $catPath = $ctx->category ? trim($ctx->category->getPath($langCode), '/') : null;
-                $slug = $ctx->item->getSlug($langCode);
+                $catPath = $ctx->category ? trim($ctx->category->getPath($lang->code), '/') : null;
+                $slug = $ctx->item->getSlug($lang->code);
                 if (!$slug) return null;
-                return sectionHref('catalog', Language::where('code', $langCode)->id) . ($catPath ? '/' . $catPath : '') . '/' . $slug;
+                return $sectionHref . ($catPath ? '/' . $catPath : '') . '/' . $slug;
 
             case CatalogRouteContext::TYPE_CATEGORY:
-                $catPath = trim($ctx->category->getPath($langCode), '/');
+                $catPath = trim($ctx->category->getPath($lang->code), '/');
                 if (!$catPath) return null;
-                return sectionHref('catalog', Language::where('code', $langCode)->id) . $catPath;
+                return $sectionHref . $catPath;
 
             case CatalogRouteContext::TYPE_LIST:
-                return sectionHref('catalog', Language::where('code', $langCode)->id);
+                return $sectionHref;
 
             default:
                 return null;

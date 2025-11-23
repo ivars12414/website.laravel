@@ -28,7 +28,7 @@ class SectionsCache
 
     private static function buildHref(array $data): string
     {
-        $languageCode = Language::find($data['lang_id'])?->code;
+        $languageCode = Language::byIdCached($data['lang_id'])?->code;
 
         if (!empty($data['scroll_href'])) {
             $uri = request()?->getRequestUri() ?? ($_SERVER['REQUEST_URI'] ?? '');

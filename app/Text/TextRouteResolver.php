@@ -25,14 +25,14 @@ class TextRouteResolver
 
         $slug = $segments[0] ?? null;
         if ($slug) {
-            $item = (clone $query)
+            $article = (clone $query)
                 ->where(function ($q) use ($slug) {
                     $q->where('slug', $slug)->orWhere('hash', $slug);
                 })
                 ->first();
 
-            $ctx = new TextRouteContext(TextRouteContext::TYPE_ITEM);
-            $ctx->item = $item;
+            $ctx = new TextRouteContext(TextRouteContext::TYPE_ARTICLE);
+            $ctx->article = $article;
             $ctx->language = $language;
             $ctx->section = $section;
             $ctx->page = $page;
@@ -41,11 +41,11 @@ class TextRouteResolver
 
         $count = (clone $query)->count();
         if ($count === 1) {
-            $ctx = new TextRouteContext(TextRouteContext::TYPE_ITEM);
-            $ctx->item = (clone $query)->first();
+            $ctx = new TextRouteContext(TextRouteContext::TYPE_ARTICLE);
+            $ctx->article = (clone $query)->first();
         } else {
             $ctx = new TextRouteContext(TextRouteContext::TYPE_LIST);
-            $ctx->items = $query;
+            $ctx->articles = $query;
         }
 
         $ctx->language = $language;

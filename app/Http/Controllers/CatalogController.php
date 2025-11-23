@@ -22,7 +22,7 @@ class CatalogController extends Controller
         /** @var \App\Catalog\CatalogRouteContext|null $route */
         $route = $context->getSectionContext('catalog');
         if (!$route) {
-            $route = $this->resolver->resolve($request, $lang);
+            $route = $this->resolver->resolve($request, $lang, $context->section());
             $context->setSectionContext('catalog', $route);
         }
 

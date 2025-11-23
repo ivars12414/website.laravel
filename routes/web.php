@@ -13,9 +13,9 @@ use App\Http\Controllers\Api\CartController;
 //    return redirect('/en/home'); // временно
 //})->name('home');
 
-Route::post('/modal/{action}', ModalContentController::class)
-    ->where('action', '.*')
-    ->name('modal-content');
+//Route::post('/modal/{action}', ModalContentController::class)
+//    ->where('action', '.*')
+//    ->name('modal-content');
 
 Route::post('/auth/login', LoginController::class)->name('auth.login');
 Route::post('/auth/activation', ActivationController::class)->name('auth.activation');
@@ -41,6 +41,13 @@ Route::post('/credits/top_up', [\App\Http\Controllers\Api\CreditsController::cla
 //    ]);
 //    return 'done';
 //});
+
+Route::get('/install-telescope', function () {
+    Artisan::call('telescope:install');
+    Artisan::call('migrate', ['--force' => true]);
+
+    return 'Telescope installed.';
+});
 
 
 Route::any('{any}', [PageController::class, 'handle'])->where('any', '.*');

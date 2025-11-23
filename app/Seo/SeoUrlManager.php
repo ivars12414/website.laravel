@@ -16,7 +16,6 @@ class SeoUrlManager
     {
         $this->context = $context;
         $this->resolvers = $resolvers;
-        $this->defaultResolver = new DefaultSectionSeoResolver();
     }
 
     public function resolve(Request $request): void

@@ -54,7 +54,7 @@ if (!function_exists('section')) {
 if (!function_exists('getMainLang')) {
     function getMainLang(): int
     {
-        return (int)(Language::default()?->id ?? 0);
+        return (int)(Language::defaultCached()?->id ?? 0);
     }
 }
 

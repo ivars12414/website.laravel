@@ -37,20 +37,20 @@ class DefaultSectionSeoResolver implements SectionSeoResolverInterface
         $context->setCanonical(url($currentPath));
 
         foreach (Language::all() as $lang) {
-            $alt = $this->buildPathForLanguage($ctx, $lang, true);
+            $alt = $this->buildPathForLanguage($ctx, $lang);
             if ($alt) $context->setAlternate($lang->id, url($alt));
         }
     }
 
-    protected function buildPathForLanguage(TextRouteContext $ctx, Language $lang, bool $dump = false): ?string
+    protected function buildPathForLanguage(TextRouteContext $ctx, Language $lang): ?string
     {
 
         $sectionHref = sectionHrefByHash($ctx->section->getHash(), $lang->id);
         if (!$sectionHref) return null;
 
         switch ($ctx->type) {
-            case TextRouteContext::TYPE_ITEM:
-                $slug = $ctx->item->getLanguageSlug($lang->id);
+            case TextRouteContext::TYPE_ARTICLE:
+                $slug = $ctx->article->getLanguageSlug($lang->id);
                 if (!$slug) return null;
                 return $sectionHref . '/' . $slug;
 

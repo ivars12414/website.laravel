@@ -6,6 +6,7 @@ use App\Catalog\Contracts\CatalogCategoryServiceInterface;
 use App\Catalog\Contracts\CatalogItemServiceInterface;
 use App\Models\Category;
 use App\Models\Language;
+use App\Models\Section;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
@@ -23,7 +24,7 @@ class CatalogRouteResolver
         $this->itemService = $itemService;
     }
 
-    public function resolve(Request $request, Language $language): CatalogRouteContext
+    public function resolve(Request $request, Language $language, Section $section): CatalogRouteContext
     {
         $segments = $request->segments();
         $langCode = $language->code;
@@ -48,6 +49,7 @@ class CatalogRouteResolver
             [$ctx->items, $ctx->filterOptions] = $this->prepareItems(null, $filters, $showSubcategoryItems);
             $ctx->categories = $showCategories ? $this->categoryService->getVisibleChildren(null, $filters) : null;
             $ctx->language = $language;
+            $ctx->section = $section;
             return $ctx;
         }
 
@@ -64,6 +66,7 @@ class CatalogRouteResolver
             $ctx->showSubcategoryItems = $showSubcategoryItems;
             $ctx->showCategories = $showCategories;
             $ctx->language = $language;
+            $ctx->section = $section;
             return $ctx;
         }
 
@@ -81,6 +84,7 @@ class CatalogRouteResolver
             [$ctx->items, $ctx->filterOptions] = $this->prepareItems($category, $filters, $showSubcategoryItems);
             $ctx->categories = $showCategories ? $this->categoryService->getVisibleChildren($category, $filters) : null;
             $ctx->language = $language;
+            $ctx->section = $section;
             return $ctx;
         }
 
@@ -93,6 +97,7 @@ class CatalogRouteResolver
         [$ctx->items, $ctx->filterOptions] = $this->prepareItems(null, $filters, $showSubcategoryItems);
         $ctx->categories = $showCategories ? $this->categoryService->getVisibleChildren(null, $filters) : null;
         $ctx->language = $language;
+        $ctx->section = $section;
         return $ctx;
     }
 

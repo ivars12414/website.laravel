@@ -2,6 +2,9 @@
 
 namespace App\Catalog;
 
+use App\Models\Language;
+use App\Models\Section;
+
 class CatalogRouteContext
 {
     public const TYPE_LIST = 'list';
@@ -19,7 +22,8 @@ class CatalogRouteContext
     public ?string $sort = null;
     public bool $showSubcategoryItems = false;
     public bool $showCategories = false;
-    public \App\Models\Language $language;
+    public Language $language;
+    public Section $section;
 
     public function __construct(string $type)
     {

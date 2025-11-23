@@ -31,18 +31,18 @@ class TextSectionController extends Controller
 
         if (!$route) abort(404);
 
-        if ($route->isList() && $route->items instanceof Builder) {
-            $route->items = $route->items
-                ->paginate(10, ['*'], 'page', $route->page ?? 1)
+        if ($route->isList() && $route->articles instanceof Builder) {
+            $route->articles = $route->articles
+                ->paginate(2, ['*'], 'page', $route->page ?? 1)
                 ->withQueryString();
         }
 
         if (!$context->meta('title')) $context->meta('title', $section?->name);
 
-        if ($route->isItem()) {
-            if (!$route->item) abort(404);
+        if ($route->isArticle()) {
+            if (!$route->article) abort(404);
 
-            $title = $route->item->title ?? $route->item->name ?? $context->meta('title');
+            $title = $route->article->title ?? $route->article->name ?? $context->meta('title');
             $context->meta('title', $title);
             $context->meta('h1', $title);
 
@@ -52,7 +52,7 @@ class TextSectionController extends Controller
                 ['title' => $title, 'url' => url()->current()],
             ]);
 
-            return view('sections.text.show', ['page' => $context, 'article' => $route->item]);
+            return view('sections.text.show', ['page' => $context, 'article' => $route->article]);
         }
 
         $context->breadcrumbs([
@@ -60,6 +60,6 @@ class TextSectionController extends Controller
             ['title' => $section?->name, 'url' => url()->current()],
         ]);
 
-        return view('sections.text.index', ['page' => $context, 'articles' => $route->items]);
+        return view('sections.text.index', ['page' => $context, 'articles' => $route->articles]);
     }
 }

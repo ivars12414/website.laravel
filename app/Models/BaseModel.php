@@ -3,9 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Traits\AutoCacheable;
 
 class BaseModel extends Model
 {
+
+    use AutoCacheable;
+
     /**
      * даты в unix_timestamp
      *

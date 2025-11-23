@@ -46,29 +46,8 @@
                         @endforeach
                     </div>
 
+                    {!! $articles->links('pagination.articles') !!}
 
-                    @if(method_exists($articles, 'links'))
-                        <div class="paginations">
-                            <div class="paginations__wrapper">{!! $articles->links() !!}</div>
-                        </div>
-                    @endif
-
-                    {{--      <div class="paginations">--}}
-                    {{--        <div class="paginations__wrapper">--}}
-                    {{--          <a href="#" class="pagination__item pagination__item--left pagination__item--disabled">Previous</a>--}}
-                    {{--          <a href="#" class="pagination__item pagination__item--current">1</a>--}}
-                    {{--          <a href="#" class="pagination__item">2</a>--}}
-                    {{--          <a href="#" class="pagination__item">3</a>--}}
-                    {{--          <a href="#" class="pagination__item">4</a>--}}
-                    {{--          <a href="#" class="pagination__item">5</a>--}}
-                    {{--          <a href="#" class="pagination__item">6</a>--}}
-                    {{--          <a href="#" class="pagination__item">7</a>--}}
-                    {{--          <a href="#" class="pagination__item">8</a>--}}
-                    {{--          <a href="#" class="pagination__item">9</a>--}}
-                    {{--          <a href="#" class="pagination__item">...</a>--}}
-                    {{--          <a href="#" class="pagination__item pagination__item--right">Next</a>--}}
-                    {{--        </div>--}}
-                    {{--      </div>--}}
                 </div>
             </section>
 

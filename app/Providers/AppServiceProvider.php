@@ -7,6 +7,7 @@ use App\Catalog\Contracts\CatalogItemServiceInterface;
 use App\Catalog\Services\CatalogCategoryService;
 use App\Catalog\Services\CatalogItemService;
 use App\Seo\CatalogSeoResolver;
+use App\Seo\DefaultSectionSeoResolver;
 use App\Seo\SeoUrlManager;
 use App\Support\PageContext;
 use Illuminate\Support\Facades\Schema;
@@ -29,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
                 $app->make(PageContext::class),
                 [
                     $app->make(CatalogSeoResolver::class),
+                    $app->make(DefaultSectionSeoResolver::class),
                     // другие резолверы разделов добавишь здесь
                 ]
             );

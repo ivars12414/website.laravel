@@ -9,11 +9,11 @@ use App\Models\Section;
 class TextRouteContext
 {
     public const TYPE_LIST = 'list';
-    public const TYPE_ITEM = 'item';
+    public const TYPE_ARTICLE = 'article';
 
     public string $type;
-    public ?Content $item = null;
-    public $items = null;
+    public ?Content $article = null;
+    public $articles = null;
     public ?int $page = null;
     public Language $language;
     public Section $section;
@@ -28,8 +28,8 @@ class TextRouteContext
         return $this->type === self::TYPE_LIST;
     }
 
-    public function isItem(): bool
+    public function isArticle(): bool
     {
-        return $this->type === self::TYPE_ITEM;
+        return $this->type === self::TYPE_ARTICLE;
     }
 }

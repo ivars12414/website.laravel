@@ -30,10 +30,10 @@ class ResolvePageContext
         $langCode = $segments[0] ?? null;
         $language = null;
         if ($langCode) {
-            $language = Language::where('status', 1)->where('code', $langCode)->first();
+            $language = Language::byCodeCached($langCode);
         }
         if (!$language) {
-            $language = Language::default();
+            $language = Language::defaultCached();
         }
         if ($language && isset($segments[0]) && $segments[0] === $language->code) {
             array_shift($segments);
@@ -53,7 +53,7 @@ class ResolvePageContext
         if ($sectionCode) {
             $section = (clone $sectionQuery)
                 ->where(function ($q) use ($sectionCode) {
-                    $q->where('code', $sectionCode)->orWhere('hash', $sectionCode);
+                    $q->where('code', $sectionCode);
                 })
                 ->first();
         }
@@ -61,7 +61,7 @@ class ResolvePageContext
         if (!$section) {
             $section = (clone $sectionQuery)
                 ->where(function ($q) {
-                    $q->where('code', 'home')->orWhere('hash', 'home');
+                    $q->where('main', '1');
                 })
                 ->first();
         }
