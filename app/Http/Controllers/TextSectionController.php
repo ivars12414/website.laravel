@@ -30,7 +30,7 @@ class TextSectionController extends Controller
             $context->setSectionContext('text', $route);
         }
 
-        if (!$route) abort(404);
+        if (!$route || $route->is404()) abort(404);
 
         if ($route->isList() && $route->articles instanceof Builder) {
             $route->articles = $route->articles

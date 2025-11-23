@@ -10,6 +10,7 @@ class CatalogRouteContext
     public const TYPE_LIST = 'list';
     public const TYPE_CATEGORY = 'category';
     public const TYPE_ITEM = 'item';
+    public const TYPE_404 = '404';
 
     public string $type;
     public $category = null;
@@ -44,4 +45,10 @@ class CatalogRouteContext
     {
         return $this->type === self::TYPE_ITEM;
     }
+
+    public function is404(): bool
+    {
+        return $this->type === self::TYPE_404;
+    }
+
 }

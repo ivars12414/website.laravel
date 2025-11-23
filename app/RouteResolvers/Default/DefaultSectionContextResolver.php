@@ -72,6 +72,7 @@ class DefaultSectionContextResolver implements SectionContextResolverInterface
         $query = Content::query()
             ->where('lang_id', $language->id)
             ->where('section_hash1', $section->hash)
+            ->where('status', '1')
             ->orderBy('id');
 
         $slug = $segments[0] ?? null;
@@ -82,7 +83,7 @@ class DefaultSectionContextResolver implements SectionContextResolverInterface
                 })
                 ->first();
 
-            $ctx = new DefaultRouteContext(DefaultRouteContext::TYPE_ARTICLE);
+            $ctx = new DefaultRouteContext($article ? DefaultRouteContext::TYPE_ARTICLE : DefaultRouteContext::TYPE_404);
             $ctx->article = $article;
             $ctx->language = $language;
             $ctx->section = $section;
