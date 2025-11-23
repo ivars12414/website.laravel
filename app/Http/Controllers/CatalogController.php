@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Catalog\CatalogRouteResolver;
+use App\Seo\CatalogRouteResolver;
 use App\Support\PageContext;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -22,7 +22,7 @@ class CatalogController extends Controller
         /** @var \App\Catalog\CatalogRouteContext|null $route */
         $route = $context->getSectionContext('catalog');
         if (!$route) {
-            $route = $this->resolver->resolve($request, $lang, $context->section());
+            $route = $this->resolver->resolveCatalog($request, $lang, $context->section());
             $context->setSectionContext('catalog', $route);
         }
 
