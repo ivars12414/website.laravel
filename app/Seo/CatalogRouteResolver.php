@@ -3,17 +3,17 @@
 namespace App\Seo;
 
 use App\Catalog\CatalogRouteContext;
-use App\Catalog\CatalogRouteResolver;
+use App\Catalog\CatalogRouteResolver as BaseCatalogRouteResolver;
 use App\Models\Language;
 use App\Models\Section;
 use App\Support\PageContext;
 use Illuminate\Http\Request;
 
-class CatalogSeoResolver implements SectionSeoResolverInterface
+class CatalogRouteResolver implements SectionSeoResolverInterface
 {
-    protected CatalogRouteResolver $routeResolver;
+    protected BaseCatalogRouteResolver $routeResolver;
 
-    public function __construct(CatalogRouteResolver $routeResolver)
+    public function __construct(BaseCatalogRouteResolver $routeResolver)
     {
         $this->routeResolver = $routeResolver;
     }
