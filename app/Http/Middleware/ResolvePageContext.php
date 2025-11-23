@@ -4,11 +4,12 @@ namespace App\Http\Middleware;
 
 use App\Models\Language;
 use App\Models\Section;
-use App\Support\PageContext;
+use App\RouteResolvers\SectionContextResolver;
 use App\Services\Currency\CurrencySelector;
 use App\Services\SessionCodeResolver;
-use App\RouteResolvers\SectionContextResolver;
+use App\Support\PageContext;
 use Closure;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class ResolvePageContext
@@ -26,30 +27,56 @@ class ResolvePageContext
 
         $segments = $request->segments();
 
-        // Язык
-        $langCode = $segments[0] ?? null;
-        $language = null;
-        if ($langCode) {
-            $language = Language::byCodeCached($langCode);
-        }
-        if (!$language) {
-            $language = Language::defaultCached();
-        }
-        if ($language && isset($segments[0]) && $segments[0] === $language->code) {
-            array_shift($segments);
-        }
-
+        $language = $this->resolveLanguage($segments);
         $context->setLanguage($language);
         if ($language) app()->setLocale($language->code);
 
-        // Раздел
+        $section = $this->resolveSection($segments, $language);
+        if ($section) {
+            $context->setSection($section);
+        }
+
+        if ($redirect = $this->ensureSectionAuth($section, $language)) {
+            return $redirect;
+        }
+
+        $this->shareMenus($context);
+
+        app(SectionContextResolver::class)->resolve($request);
+
+        $this->setSectionBodyClass($context);
+
+        view()->share('page', $context);
+
+        return $next($request);
+    }
+
+    private function resolveLanguage(array &$segments): ?Language
+    {
+        $langCode = $segments[0] ?? null;
+        $language = $langCode ? Language::byCodeCached($langCode) : null;
+
+        if (!$language) {
+            $language = Language::defaultCached();
+        }
+
+        if ($language && ($segments[0] ?? null) === $language->code) {
+            array_shift($segments);
+        }
+
+        return $language;
+    }
+
+    private function resolveSection(array &$segments, ?Language $language): ?Section
+    {
         $sectionCode = $segments[0] ?? null;
-        $section = null;
         $sectionQuery = Section::query();
+
         if ($language) {
             $sectionQuery->where('lang_id', $language->id);
         }
 
+        $section = null;
         if ($sectionCode) {
             $section = (clone $sectionQuery)
                 ->where(function ($q) use ($sectionCode) {
@@ -70,14 +97,20 @@ class ResolvePageContext
             array_shift($segments);
         }
 
-        if ($section) $context->setSection($section);
+        return $section;
+    }
 
-        // Auth для разделов с requires_auth или это раздел кабинета
+    private function ensureSectionAuth(?Section $section, ?Language $language): ?RedirectResponse
+    {
         if ($section && ((int)$section->auth_required || (int)$section->position === Section::POSITION_CABINET) && !auth()->check()) {
             return redirect()->to(sectionHref('', $language?->id ?? 0));
         }
 
-        // Меню
+        return null;
+    }
+
+    private function shareMenus(PageContext $context): void
+    {
         $langId = $context->language()?->id;
         $context->setMenus([
             'menu' => Section::whereActive()
@@ -100,41 +133,31 @@ class ResolvePageContext
                 ->orderBy('order_id')
                 ->get(),
         ]);
-
-        // Разбираемся с контекстом раздела
-        app(SectionContextResolver::class)->resolve($request);
-
-        $this->setSectionBodyClass($context);
-
-        view()->share('page', $context);
-
-        return $next($request);
     }
 
     private function setSectionBodyClass(PageContext $context): void
     {
-
-        $body_section_labels_classes = [
-            'news' => '',
-        ];
-
-        $body_section_types_classes = [
+        $bodySectionTypesClasses = [
             'main' => 'main',
             'cabinet' => 'cabinet',
             'text' => 'inside',
             '404' => 'inside',
         ];
 
-        if (!(int)$context->section()->main) {
-            if ((int)$context->section()->position === SECTION_CABINET) {
-                $context->setBodyClass($body_section_types_classes['cabinet']);
-            } else {
-                $context->setBodyClass($body_section_types_classes['text']);
-            }
-        } else {
-            $context->setBodyClass($body_section_types_classes['main']);
+        $section = $context->section();
+        if (!$section) {
+            return;
         }
 
+        if (!(int)$section->main) {
+            if ((int)$section->position === Section::POSITION_CABINET) {
+                $context->setBodyClass($bodySectionTypesClasses['cabinet']);
+            } else {
+                $context->setBodyClass($bodySectionTypesClasses['text']);
+            }
+        } else {
+            $context->setBodyClass($bodySectionTypesClasses['main']);
+        }
     }
 
 }
