@@ -1,12 +1,12 @@
 <div class="product__item">
     <div class="product__item-wrapper">
-        <div class="product__item-header">
+        <a href="{!! $item->link !!}" class="product__item-header">
             <div class="product__img">
                 <img src="{{ $item->imgUrl }}" alt="{{ $item->name }}">
             </div>
             <div class="product__title">{{ $item->name }}</div>
             <div class="product__text">{!! $item->description !!}</div>
-        </div>
+        </a>
 
         <form class="product__item-footer" action="/cart/add-product" method="post" data-add-to-cart>
             <input type="hidden" name="item_id" value="{{ $item->id }}">

@@ -8,12 +8,14 @@ function returnCategoryLink($category): string
 
     $categoryPath = '';
 
+//    dd($category->first());
+
     while (true) {
 
         $categoryPath = '/' . $category->slug . $categoryPath;
 
         if (!empty($category->parent_id)) {
-            $category = Category::where('id', $category->parent_id);
+            $category = Category::where('id', $category->parent_id)->first();
         } else {
             // Родительская категория не найдена
             break;

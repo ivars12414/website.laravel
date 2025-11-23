@@ -151,7 +151,6 @@ class Category extends BaseModel
         return self::where('slug', $slug)->first();
     }
 
-
     public function getParentsChain(string $lang): SupportCollection
     {
         if (property_exists($this, 'tree') && $this->tree instanceof SupportCollection) {

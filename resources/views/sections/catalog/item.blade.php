@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('layouts.app')
 
 @section('content')
 
@@ -10,7 +10,7 @@
         <div class="product" itemscope itemtype="https://schema.org/Product">
 
             <div class="product__title">
-                <h1 itemprop="name">{{ $item->name }}</h1>
+                <h1 itemprop="name">{{ $page->meta('h1') }}</h1>
             </div>
 
             <div class="product__wrapper">
@@ -19,31 +19,31 @@
                      class="product__block no-equipment">
 
                     <div class="product__slider-wrapper">
-                        @if (count($photos) > 1)
-                            <div class="product__thumbs-block">
-                                <div class=" product__thumbs js-opened-product-thumbs">
-                                    @foreach ($photos as $photo)
-                                        <div class="">
-                                            <img src="{{ $photo['small'] }}" class=""
-                                                 alt="{{ $item->name }}">
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        @endif
+                        {{--                        @if (count($photos) > 1)--}}
+                        {{--                            <div class="product__thumbs-block">--}}
+                        {{--                                <div class=" product__thumbs js-opened-product-thumbs">--}}
+                        {{--                                    @foreach ($photos as $photo)--}}
+                        {{--                                        <div class="">--}}
+                        {{--                                            <img src="{{ $photo['small'] }}" class=""--}}
+                        {{--                                                 alt="{{ $item->name }}">--}}
+                        {{--                                        </div>--}}
+                        {{--                                    @endforeach--}}
+                        {{--                                </div>--}}
+                        {{--                            </div>--}}
+                        {{--                        @endif--}}
 
-                        <div class="product__images-block @if (count($photos) === 1) no-slider @endif">
+                        <div class="product__images-block {{--@if (count($photos) === 1) no-slider @endif--}}">
                             <div class="product__images js-opened-product-images">
-                                @foreach ($photos as $photo)
-                                    <div class="">
-                                        <div class="product__img">
-                                            <a draggable="false" href="{{ $photo['big'] }}" class="fancybox"
-                                               rel="BigItems">
-                                                <img src="{{ $photo['big'] }}" alt="{{ $item->name }}">
-                                            </a>
-                                        </div>
-                                    </div>
-                                @endforeach
+                                {{--                                @foreach ($photos as $photo)--}}
+                                {{--                                    <div class="">--}}
+                                {{--                                        <div class="product__img">--}}
+                                {{--                                            <a draggable="false" href="{{ $photo['big'] }}" class="fancybox"--}}
+                                {{--                                               rel="BigItems">--}}
+                                {{--                                                <img src="{{ $photo['big'] }}" alt="{{ $item->name }}">--}}
+                                {{--                                            </a>--}}
+                                {{--                                        </div>--}}
+                                {{--                                    </div>--}}
+                                {{--                                @endforeach--}}
                             </div>
                         </div>
                     </div>
@@ -135,7 +135,7 @@
         {{--            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}--}}
         {{--        </script>--}}
 
-        @include('pages.catalog.partials.similar')
+        {{--        @include('pages.catalog.partials.similar')--}}
 
     </div>
 

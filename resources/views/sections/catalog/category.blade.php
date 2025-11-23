@@ -5,17 +5,18 @@
         <div class="page__wrapper">
             @include('partials.header')
 
-            @if (!$ctx->categories->isEmpty())
-                <section class="section section--gray-light countries"
-                         style="background-image: url(/userfiles/bg.png);">
-                    <div class="container">
-                        <div class="block__header">
-                            @include('partials.breadcrumbs')
+            <section class="section section--gray-light countries"
+                     style="background-image: url(/userfiles/bg.png);">
+                <div class="container">
+                    <div class="block__header">
+                        @include('partials.breadcrumbs')
 
-                            <div class="block__title center js-title">
-                                <h1><?= $currentCategory->name ?? section()->getH1() ?></h1>
-                            </div>
+                        <div class="block__title center js-title">
+                            <h1>{!! $page->meta('h1') !!}</h1>
                         </div>
+                    </div>
+
+                    @if (!$ctx->categories->isEmpty())
 
                         <div class="countries__wrapper" id="categories-list">
                             @php $catsI = 0; @endphp
@@ -24,33 +25,9 @@
                             @endforeach
                         </div>
 
-                        <div class="actions center">
-                            <a href="#" class="btn btn--o-main"
-                               data-view-all="#categories-list">{!! returnWord('View all', WORDS_PROJECT) !!}</a>
-                        </div>
-                    </div>
-                </section>
-            @endif
+                    @endif
 
-            @if (!$ctx->items->isEmpty())
-                <section class="section section--gray-light products" style="background-image: url(/userfiles/bg.png);">
-                    <div class="container">
-                        <div class="block__header">
-                            @include('partials.breadcrumbs')
-
-                            <div class="block__title center">
-                                <h1><strong>{!! $ctx->category->name ?? section()->getH1() !!}</strong></h1>
-                            </div>
-                        </div>
-
-                        {{--                        @if(isConfig('catalog_filter_enabled'))--}}
-                        {{--                            @include('sections.catalog.partials.filter', [--}}
-                        {{--                                'items' => $ctx->items,--}}
-                        {{--                                'filters' => $ctx->filters,--}}
-                        {{--                                'filterOptions' => $ctx->filterOptions,--}}
-                        {{--                                'currentCategory' => $ctx->category,--}}
-                        {{--                            ])--}}
-                        {{--                        @endif--}}
+                    @if (!$ctx->items->isEmpty())
 
                         <div data-items-list>
                             @include('sections.catalog.partials.items_list', ['items' => $ctx->items])
@@ -58,9 +35,11 @@
                         <div data-items-pagination>
                             {{ $ctx->items->links() }}
                         </div>
-                    </div>
-                </section>
-            @endif
+
+                    @endif
+
+                </div>
+            </section>
 
             {{--            @include('partials.faq')--}}
         </div>

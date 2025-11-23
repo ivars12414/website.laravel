@@ -37,21 +37,24 @@ class CatalogController extends Controller
         if ($route->isCategory() && !$route->category) abort(404);
 
         if ($route->isItem()) {
-            $context->meta('title', $route->item->getMetaTitle($lang->code) ?? $route->item->getName($lang->code));
+            $title = $route->item->getMetaTitle($lang->code) ?? $route->item->getName($lang->code);
+            $context->meta('title', $title);
+            $context->meta('h1', $title);
             $context->breadcrumbs($this->itemBreadcrumbs($route, $lang->code));
-            return view('sections.catalog.item', ['ctx' => $route]);
+            return view('sections.catalog.item', ['ctx' => $route, 'item' => $route->item]);
         }
 
         if ($route->isCategory()) {
-            $context->meta('title', $route->category->getMetaTitle($lang->code) ?? $route->category->getName($lang->code));
+            $title = $route->category->getMetaTitle($lang->code) ?? $route->category->getName($lang->code);
+            $context->meta('title', $title);
+            $context->meta('h1', $title);
             $context->breadcrumbs($this->categoryBreadcrumbs($route, $lang->code));
             return view('sections.catalog.category', ['ctx' => $route]);
         }
 
-        $context->meta('title', 'Catalog');
         $context->breadcrumbs([
             ['title' => 'Home', 'url' => sectionHref()],
-            ['title' => 'Catalog', 'url' => url()->current()],
+            ['title' => section()->name, 'url' => url()->current()],
         ]);
 
         return view('sections.catalog.category', ['ctx' => $route]);
@@ -61,14 +64,15 @@ class CatalogController extends Controller
     {
         $bc = [
             ['title' => 'Home', 'url' => sectionHref()],
-            ['title' => 'Catalog', 'url' => sectionHref('catalog', $ctx->language->id)],
+            ['title' => section()->name, 'url' => sectionHref('catalog', $ctx->language->id)],
         ];
         if ($ctx->category) {
             foreach ($ctx->category->getParentsChain($lang) as $cat) {
-                $bc[] = ['title' => $cat->getName($lang), 'url' => $cat->getUrl($lang)];
+                $bc[] = ['title' => $cat->name, 'url' => $cat->link];
             }
+            $bc[] = ['title' => $ctx->category->name, 'url' => $ctx->category->link];
         }
-        $bc[] = ['title' => $ctx->item->getName($lang), 'url' => null];
+        $bc[] = ['title' => $ctx->item->name, 'url' => null];
         return $bc;
     }
 
@@ -76,10 +80,10 @@ class CatalogController extends Controller
     {
         $bc = [
             ['title' => 'Home', 'url' => sectionHref()],
-            ['title' => 'Catalog', 'url' => sectionHref('catalog', $ctx->language->id)],
+            ['title' => section()->name, 'url' => sectionHref('catalog', $ctx->language->id)],
         ];
         foreach ($ctx->category->getParentsChain($lang) as $cat) {
-            $bc[] = ['title' => $cat->getName($lang), 'url' => $cat->getUrl($lang)];
+            $bc[] = ['title' => $cat->getName($lang), 'url' => $cat->link];
         }
         $bc[] = ['title' => $ctx->category->getName($lang), 'url' => null];
         return $bc;
