@@ -8,7 +8,7 @@ use App\Text\TextRouteContext;
 use App\Text\TextRouteResolver;
 use Illuminate\Http\Request;
 
-class DefaultSectionSeoResolver implements SectionSeoResolverInterface
+class DefaultSectionContextResolver implements SectionContextResolverInterface
 {
     protected TextRouteResolver $routeResolver;
 

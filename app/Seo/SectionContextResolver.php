@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class SectionContextResolver
 {
     protected array $resolvers;
-    protected SectionSeoResolverInterface $defaultResolver;
+    protected SectionContextResolverInterface $defaultResolver;
     protected PageContext $context;
 
     public function __construct(PageContext $context, array $resolvers = [])
@@ -27,7 +27,7 @@ class SectionContextResolver
         $resolver->resolve($request, $this->context);
     }
 
-    protected function findResolver(Section $section): SectionSeoResolverInterface
+    protected function findResolver(Section $section): SectionContextResolverInterface
     {
         foreach ($this->resolvers as $resolver) {
             if ($resolver->supports($section)) {

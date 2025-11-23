@@ -9,7 +9,7 @@ use App\Models\Section;
 use App\Support\PageContext;
 use Illuminate\Http\Request;
 
-class CatalogRouteResolver implements SectionSeoResolverInterface
+class CatalogRouteResolver implements SectionContextResolverInterface
 {
     protected BaseCatalogRouteResolver $routeResolver;
 
