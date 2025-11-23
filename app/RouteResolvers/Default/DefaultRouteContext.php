@@ -6,10 +6,11 @@ use App\Models\Content;
 use App\Models\Language;
 use App\Models\Section;
 
-class TextRouteContext
+class DefaultRouteContext
 {
     public const TYPE_LIST = 'list';
     public const TYPE_ARTICLE = 'article';
+    public const TYPE_404 = '404';
 
     public string $type;
     public ?Content $article = null;
@@ -32,4 +33,10 @@ class TextRouteContext
     {
         return $this->type === self::TYPE_ARTICLE;
     }
+
+    public function is404(): bool
+    {
+        return $this->type === self::TYPE_404;
+    }
+
 }

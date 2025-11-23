@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\RouteResolvers\Default\DefaultSectionContextResolver;
-use App\RouteResolvers\Default\TextRouteContext;
+use App\RouteResolvers\Default\DefaultRouteContext;
 use App\Support\PageContext;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -23,7 +23,7 @@ class TextSectionController extends Controller
         $section = $context->section();
         $language = $context->language();
 
-        /** @var TextRouteContext|null $route */
+        /** @var DefaultRouteContext|null $route */
         $route = $context->getSectionContext('text');
         if (!$route && $section && $language) {
             $route = $this->resolver->resolveText($request, $language, $section);

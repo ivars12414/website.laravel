@@ -24,7 +24,7 @@ class DefaultSectionContextResolver implements SectionContextResolverInterface
 
 
         $ctx = $context->getSectionContext('text');
-        if (!$ctx instanceof TextRouteContext) {
+        if (!$ctx instanceof DefaultRouteContext) {
             $ctx = $this->resolveText($request, $language, $section);
             $context->setSectionContext('text', $ctx);
         }
@@ -40,19 +40,19 @@ class DefaultSectionContextResolver implements SectionContextResolverInterface
         }
     }
 
-    protected function buildPathForLanguage(TextRouteContext $ctx, Language $lang): ?string
+    protected function buildPathForLanguage(DefaultRouteContext $ctx, Language $lang): ?string
     {
 
         $sectionHref = sectionHrefByHash($ctx->section->getHash(), $lang->id);
         if (!$sectionHref) return null;
 
         switch ($ctx->type) {
-            case TextRouteContext::TYPE_ARTICLE:
+            case DefaultRouteContext::TYPE_ARTICLE:
                 $slug = $ctx->article->getLanguageSlug($lang->id);
                 if (!$slug) return null;
                 return $sectionHref . '/' . $slug;
 
-            case TextRouteContext::TYPE_LIST:
+            case DefaultRouteContext::TYPE_LIST:
                 return $sectionHref;
 
             default:
@@ -60,7 +60,7 @@ class DefaultSectionContextResolver implements SectionContextResolverInterface
         }
     }
 
-    public function resolveText(Request $request, Language $language, Section $section): TextRouteContext
+    public function resolveText(Request $request, Language $language, Section $section): DefaultRouteContext
     {
         $segments = $request->segments();
 
@@ -82,7 +82,7 @@ class DefaultSectionContextResolver implements SectionContextResolverInterface
                 })
                 ->first();
 
-            $ctx = new TextRouteContext(TextRouteContext::TYPE_ARTICLE);
+            $ctx = new DefaultRouteContext(DefaultRouteContext::TYPE_ARTICLE);
             $ctx->article = $article;
             $ctx->language = $language;
             $ctx->section = $section;
@@ -92,10 +92,10 @@ class DefaultSectionContextResolver implements SectionContextResolverInterface
 
         $count = (clone $query)->count();
         if ($count === 1) {
-            $ctx = new TextRouteContext(TextRouteContext::TYPE_ARTICLE);
+            $ctx = new DefaultRouteContext(DefaultRouteContext::TYPE_ARTICLE);
             $ctx->article = (clone $query)->first();
         } else {
-            $ctx = new TextRouteContext(TextRouteContext::TYPE_LIST);
+            $ctx = new DefaultRouteContext(DefaultRouteContext::TYPE_LIST);
             $ctx->articles = $query;
         }
 
