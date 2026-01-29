@@ -12,7 +12,7 @@ use App\Payment\Registry\PaymentHandlerRegistry;
 
 class PaymentService
 {
-    public function createPayment(string $type, int $orderId, string $paymentMethodHash, float $sum, string $currencyCode, array $urls, int $source = 0): array
+    public function createPayment(string $type, int $orderId, int $paymentMethodId, float $sum, string $currencyCode, array $urls, int $source = 0): array
     {
         if ($sum <= 0) {
             return ['error' => true, 'msg' => 'The amount must be greater than 0'];
@@ -24,7 +24,7 @@ class PaymentService
 
         // Получаем метод оплаты
         $paymentMethod = PaymentMethod::whereActive()
-            ->where('hash', $paymentMethodHash)
+            ->where('id', $paymentMethodId)
             ->first();
 
         if (!$paymentMethod) {
@@ -37,7 +37,7 @@ class PaymentService
             'order_id' => $orderId,
             'sum' => $sum,
             'currency_code' => $currencyCode,
-            'payment_method_hash' => $paymentMethodHash,
+            'payment_method_id' => $paymentMethodId,
             'success_url' => $urls['success'],
             'canceled_url' => $urls['cancel'],
             'failed_url' => $urls['failed'],
@@ -152,7 +152,7 @@ class PaymentService
      */
     function paymentMethodBlock(string $order_type, string $view = 'select'): string
     {
-        $payment_methods = \App\Models\PaymentMethod::whereActive()->where('lang_id', lang()->id)->get();
+        $payment_methods = \App\Models\PaymentMethod::whereActive()->get();
 
         $payment_methods = $payment_methods->filter(function ($payment_method) use ($order_type) {
             return in_array($order_type, $payment_method->order_types ?? []);
@@ -169,7 +169,7 @@ class PaymentService
                             <?php foreach ($payment_methods as $record) { ?>
                                 <div class="radio">
                                     <input type="radio" class="" name="payment_method" id="p_m_<?= $record->id ?>"
-                                           value="<?= $record->hash ?>">
+                                           value="<?= $record->id ?>">
                                     <label for="p_m_<?= $record->id ?>">
                                         <img src="/userfiles/payment_methods/<?= $record->icon ?>" height="20" alt="">
                                         <?= $record->name ?>
@@ -185,7 +185,7 @@ class PaymentService
                             <div class="select">
                                 <select name="payment_method" class="js-select">
                                     <?php foreach ($payment_methods as $record) { ?>
-                                        <option value="<?= $record->hash ?>"><?= $record->name ?></option>
+                                        <option value="<?= $record->id ?>"><?= $record->name ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
@@ -195,7 +195,7 @@ class PaymentService
                 }
                 ?>
             <?php } else { ?>
-                <input type="hidden" name="payment_method" value="<?= $payment_methods->first()->hash ?>">
+                <input type="hidden" name="payment_method" value="<?= $payment_methods->first()->id ?>">
             <?php }
         }
         $html = ob_get_contents();

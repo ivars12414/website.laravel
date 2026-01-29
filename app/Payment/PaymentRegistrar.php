@@ -34,7 +34,6 @@ class PaymentRegistrar
         // Получаем все активные методы оплаты
         $methods = PaymentMethod::where('status', 1)
             ->where('deleted', 0)
-            ->where('lang_id', lang()->id)
             ->distinct()
             ->pluck('label')
             ->toArray();
