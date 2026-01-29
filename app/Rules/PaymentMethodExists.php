@@ -16,7 +16,7 @@ class PaymentMethodExists implements ValidationRule
 
     public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
-        if (!PaymentMethod::whereActive()->where('hash', $value)->where('deleted', 0)->exists()) {
+        if (!PaymentMethod::whereActive()->where('id', $value)->where('deleted', 0)->exists()) {
             $fail(returnWord('Payment method not found', WORDS_PROJECT));
         }
     }

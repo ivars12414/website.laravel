@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\MultiLanguageExternal;
 use App\Models\Traits\WithOrd;
 use App\Models\Traits\WithStatus;
 use Illuminate\Database\Eloquent\Model;
@@ -10,6 +11,7 @@ class PaymentMethod extends Model
 {
   use WithStatus;
   use WithOrd;
+  use MultiLanguageExternal;
 
   protected $table = 'payment_methods';
 
@@ -19,19 +21,14 @@ class PaymentMethod extends Model
           'order_types' => 'array',
   ];
 
-  public static function findByLabel(string $label, int $langId)
-  {
-    return static::where('label', $label)
-            ->where('lang_id', $langId)
-            ->first();
-//            ->toSql();
-  }
+  protected array $multilingual = [
+          'name',
+          'descr',
+          'btn_txt',
+  ];
 
-  public static function findByHash(string $hash, int $langId)
+  public static function findByLabel(string $label)
   {
-    return static::where('hash', $hash)
-            ->where('lang_id', $langId)
-            ->first();
-//            ->toSql();
+    return static::where('label', $label)->first();
   }
 }
